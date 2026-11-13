@@ -23,7 +23,7 @@ from pathlib import Path
 
 # ---------------------------------------------------------------- ค่าตั้งต้น
 ICT = timezone(timedelta(hours=7))
-UA = "cloud-status-watch/0.2 (personal status monitor)"
+UA = "cloud-status-watch/0.2.1 (personal status monitor)"
 TIMEOUT = 25
 MAX_BYTES = 3_000_000
 
@@ -51,6 +51,7 @@ MISMATCH_MINUTES = 90      # JSON กับ RSS ลงเวลา update ต่
 STALE_HOURS = 6            # ยังขึ้นว่ามีเหตุ แต่ไม่มี update เกินนี้ = remark
 AWS_MAX_AGE_HOURS = 24     # รายการ AWS ที่เก่ากว่านี้ไม่แจ้งเตือน (บันทึก log อย่างเดียว)
 AWS_MAX_ALERTS = 10        # กันข้อความท่วมในรอบเดียว
+ID_MAX_TRIES = 6           # จำนวนรอบที่ลองค้น incident ID ซ้ำต่อหนึ่งหัวข้อ (นอกเหนือจากตอนมี update)
 FAIL_THRESHOLD = 2         # network/http error ต้องเกิดติดกันกี่รอบจึง remark
 
 COLOR = {"new": 0xE74C3C, "update": 0xE67E22, "resolved": 0x2ECC71,
@@ -259,16 +260,33 @@ def aws_parts(guid):
     return m.group("svc"), m.group("region") or "global"
 
 
+ID_RE = re.compile(r"\b([A-Z]{2}\d{5,8})\b")
+
+
 def find_incident_id(page, title):
-    """หา ID แบบ EX1234567 ที่คู่กับ title เดียวกันในหน้า UPenn"""
+    """หา ID แบบ MO1234567 ที่อยู่ใกล้หัวข้อเดียวกันที่สุดในหน้า UPenn
+
+    ไม่ผูกกับเครื่องหมายคั่น: รองรับ "ID - หัวข้อ", "ID: หัวข้อ" และแบบตาราง
+    เลือก ID ที่อยู่ก่อนหัวข้อและใกล้ที่สุดก่อน ถ้าไม่มีจึงดู ID ที่ตามหลัง
+    """
     want = re.sub(r"\s+", " ", title).strip().lower()[:70]
     if not want:
         return None
-    flat = clean(page, limit=len(page))
-    for m in re.finditer(r"\b([A-Z]{2}\d{5,8})\s*:\s*", flat):
-        if flat[m.end(): m.end() + 200].lower().startswith(want):
-            return m.group(1)
-    return None
+    flat = clean(page, limit=len(page) + 1)
+    low, best = flat.lower(), None
+    pos = low.find(want)
+    while pos != -1:
+        end = pos + len(want)
+        before = list(ID_RE.finditer(flat, max(0, pos - 120), pos))
+        if before:
+            cand = (pos - before[-1].end(), before[-1].group(1))
+        else:
+            after = ID_RE.search(flat, end, end + 120)
+            cand = (1000 + after.start() - end, after.group(1)) if after else None
+        if cand and (best is None or cand < best):
+            best = cand
+        pos = low.find(want, pos + 1)
+    return best[1] if best else None
 
 
 # ---------------------------------------------------------------- Discord
@@ -331,6 +349,7 @@ def main():
     health = state.setdefault("health", {})
 
     embeds, logs, problems, readings = [], [], {}, {}
+    upenn_tried = False
 
     def log(kind, source, **kw):
         logs.append({"ts_utc": iso(now), "ts_ict": now.astimezone(ICT).isoformat(timespec="seconds"),
@@ -373,13 +392,27 @@ def main():
             kind = "update"
         elif not active and prev.get("active"):
             kind = "resolved"
+        found_late = False
         if active:
-            cur["incident_id"] = prev.get("incident_id") if prev.get("title") == cur["title"] else None
-            if kind and not cur["incident_id"]:
+            same = prev.get("title") == cur["title"]
+            cur["incident_id"] = prev.get("incident_id") if same else None
+            cur["id_tries"] = prev.get("id_tries", 0) if same else 0
+            # ค้น ID เมื่อมี update และลองซ้ำอีกไม่เกิน ID_MAX_TRIES รอบถ้ายังไม่ได้
+            if not cur["incident_id"] and cur["title"] and (kind or cur["id_tries"] < ID_MAX_TRIES):
+                upenn_tried = True
+                cur["id_tries"] = min(cur["id_tries"] + 1, ID_MAX_TRIES)
                 try:
                     cur["incident_id"] = find_incident_id(fetch("upenn", args.fixtures), cur["title"])
+                    result = "found" if cur["incident_id"] else "no_match"
                 except Problem as p:
                     problems["upenn"] = p
+                    result = f"fetch_failed:{p.code}"
+                log("id_lookup", "ms365", result=result, incident_id=cur["incident_id"],
+                    title=cur["title"], attempt=cur["id_tries"])
+                found_late = bool(cur["incident_id"]) and not kind
+        if found_late:
+            embeds.append(embed("info", f"🔵 Microsoft 365: พบ Incident ID {cur['incident_id']}",
+                                f"**{cur['title']}**", url=PUBLIC_PAGE["ms365"]))
         if kind:
             head = {"new": "🔴 Microsoft 365: พบ incident ใหม่", "update": "🟠 Microsoft 365: มี update",
                     "resolved": "🟢 Microsoft 365: กลับสู่สถานะปกติ"}[kind]
@@ -481,7 +514,7 @@ def main():
         p, was = problems.get(name), health.get(name, {})
         if p is None:
             # upenn ถูกเรียกเฉพาะบางรอบ จึงไม่ถือว่า "หาย" จนกว่าจะเรียกสำเร็จจริง
-            if name == "upenn" and not (state.get("ms365", {}).get("incident_id")):
+            if name == "upenn" and not upenn_tried:
                 continue
             if was.get("alerted"):
                 embeds.append(embed("resolved", f"🟢 Remark ปิด: {label[name]}", "แหล่งข้อมูลกลับมาอ่านได้ตามปกติ"))
@@ -490,7 +523,8 @@ def main():
             continue
         n = min(was.get("n", 0) + 1 if was.get("code") == p.code else 1, FAIL_THRESHOLD)
         alerted = was.get("alerted", False) and was.get("code") == p.code
-        if not alerted and n >= (1 if p.code in IMMEDIATE else FAIL_THRESHOLD):
+        # upenn ถูกเรียกเป็นครั้งคราว จึงแจ้งทันทีโดยไม่รอให้พลาดติดกัน
+        if not alerted and n >= (1 if (p.code in IMMEDIATE or name == "upenn") else FAIL_THRESHOLD):
             embeds.append(embed("remark", f"⚠️ Remark: {label[name]}", PROBLEM_TEXT[p.code],
                                 [("รายละเอียด", p.detail or "-", False)],
                                 footer="การแจ้งเตือนจากแหล่งนี้อาจไม่ครบหรือล่าช้า จนกว่า remark นี้จะปิด"))
