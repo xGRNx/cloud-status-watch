@@ -42,7 +42,13 @@
   ]
  },
  "azure": {},
- "health": {},
+ "health": {
+  "ms_rss": {
+   "alerted": false,
+   "code": "network",
+   "n": 1
+  }
+ },
  "last_run_date": "2026-11-14",
  "ms365": {
   "active": true,
@@ -50,7 +56,7 @@
   "incident_id": "MO1550821",
   "status": "Service degradation",
   "title": "Users may be unable to connect to multiple Microsoft 365 services",
-  "updated": "2026-11-13T17:57:50+00:00",
+  "updated": "2026-11-13T20:02:18+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
