@@ -1,0 +1,1 @@
+<html><body><h2>EX0000001: Sample: users may be unable to connect to their mailboxes</h2><p>status: serviceDegradation</p></body></html>

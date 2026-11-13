@@ -1,0 +1,1 @@
+{"Id":"00000000-0000-0000-0000-000000000001","AuthoredDateTime":"2026-11-12T18:10:13+00:00","InternalDateTime":"2026-11-12T18:10:13+00:00","LastUpdatedTime":"2026-11-12T18:10:13+00:00","Title":"Sample: users may be unable to connect to their mailboxes","Message":"<div>Sample message for testing. Next update at 8:00 PM UTC.</div>","Status":"Service degradation"}

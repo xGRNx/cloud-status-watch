@@ -1,0 +1,484 @@
+#!/usr/bin/env python3
+"""cloud-status-watch
+
+เฝ้าสถานะ "สาธารณะ" ของ Microsoft 365 / Outlook.com / Azure / AWS
+แล้วแจ้งเตือนเข้า Discord เมื่อมี incident ใหม่ สถานะเปลี่ยน หรือ incident ปิด
+พร้อม remark เมื่อแหล่งข้อมูลเองมีปัญหา (โดน block, รูปแบบเปลี่ยน, ข้อมูลไม่ตรงกัน, ข้อมูลค้าง)
+
+ใช้เฉพาะ Python standard library — ไม่ต้องติดตั้ง package เพิ่ม
+"""
+import argparse
+import html
+import json
+import os
+import re
+import sys
+import time
+import urllib.error
+import urllib.request
+import xml.etree.ElementTree as ET
+from datetime import datetime, timedelta, timezone
+from email.utils import parsedate_to_datetime
+from pathlib import Path
+
+# ---------------------------------------------------------------- ค่าตั้งต้น
+ICT = timezone(timedelta(hours=7))
+UA = "cloud-status-watch/1.0 (personal status monitor)"
+TIMEOUT = 25
+MAX_BYTES = 3_000_000
+
+SOURCES = {
+    "ms_json": ("Microsoft 365 (JSON)", "https://status.cloud.microsoft/api/posts/mac"),
+    "ms_rss": ("Microsoft 365 (RSS)", "https://status.cloud.microsoft/api/feed/mac"),
+    "ms_consumer": ("Microsoft 365 consumer / Outlook.com", "https://status.cloud.microsoft/api/posts/m365Consumer"),
+    "azure": ("Azure Status", "https://rssfeed.azure.status.microsoft/en-us/status/feed/"),
+    "aws": ("AWS Health", "https://status.aws.amazon.com/rss/all.rss"),
+    # ใช้เติม incident ID (EX…/MO…) เท่านั้น และดึงเฉพาะตอนมี incident ของ Microsoft 365
+    "upenn": ("UPenn incident extract (เสริม)", "https://mailservices.isc.upenn.edu/computing/email/penno365/alerts/ms-incidents.html"),
+}
+PUBLIC_PAGE = {
+    "ms365": "https://status.cloud.microsoft/",
+    "ms_consumer": "https://status.cloud.microsoft/m365",
+    "azure": "https://azure.status.microsoft/en-us/status/",
+    "aws": "https://health.aws.amazon.com/health/status",
+}
+
+OK_STATUSES = {
+    "operational", "serviceoperational", "servicerestored", "available", "healthy",
+    "normal", "falsepositive", "postincidentreviewpublished", "resolved", "ok", "good",
+}
+MISMATCH_MINUTES = 90      # JSON กับ RSS ลงเวลา update ต่างกันเกินนี้ = remark
+STALE_HOURS = 6            # ยังขึ้นว่ามีเหตุ แต่ไม่มี update เกินนี้ = remark
+AWS_MAX_AGE_HOURS = 24     # รายการ AWS ที่เก่ากว่านี้ไม่แจ้งเตือน (บันทึก log อย่างเดียว)
+AWS_MAX_ALERTS = 10        # กันข้อความท่วมในรอบเดียว
+FAIL_THRESHOLD = 2         # network/http error ต้องเกิดติดกันกี่รอบจึง remark
+
+COLOR = {"new": 0xE74C3C, "update": 0xE67E22, "resolved": 0x2ECC71,
+         "remark": 0x95A5A6, "info": 0x3498DB}
+
+PROBLEM_TEXT = {
+    "blocked": "ถูกปฏิเสธการเข้าถึง — อาจโดน block หรือจำกัดอัตราการเรียก",
+    "http_error": "เซิร์ฟเวอร์ต้นทางตอบกลับด้วยข้อผิดพลาด",
+    "network": "เชื่อมต่อไม่ได้หรือหมดเวลา",
+    "parse": "อ่านข้อมูลไม่ได้ — รูปแบบอาจเปลี่ยน",
+    "shape": "โครงสร้างข้อมูลไม่เป็นไปตามที่คาด — รูปแบบอาจเปลี่ยน",
+    "mismatch_status": "ช่องทาง JSON กับ RSS รายงานสถานะไม่ตรงกัน",
+    "mismatch_time": f"ช่องทาง JSON กับ RSS ลงเวลา update ต่างกันเกิน {MISMATCH_MINUTES} นาที",
+    "stale": f"ยังแสดงว่ามีเหตุ แต่ไม่มี update เกิน {STALE_HOURS} ชั่วโมง — ข้อมูลอาจค้าง",
+}
+IMMEDIATE = {"blocked", "parse", "shape", "mismatch_status", "mismatch_time", "stale"}
+TH_MONTH = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.",
+            "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."]
+
+
+# ---------------------------------------------------------------- เครื่องมือย่อย
+class Problem(Exception):
+    def __init__(self, code, detail=""):
+        super().__init__(f"{code}: {detail}")
+        self.code, self.detail = code, detail
+
+
+def fmt_ict(dt):
+    if not dt:
+        return "ไม่ระบุ"
+    d = dt.astimezone(ICT)
+    return f"{d.day} {TH_MONTH[d.month - 1]} {d.year + 543} {d:%H:%M} น. (UTC+7)"
+
+
+def parse_dt(value):
+    if not value:
+        return None
+    value = value.strip()
+    try:
+        dt = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        try:
+            dt = parsedate_to_datetime(value)
+        except (TypeError, ValueError):
+            return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt
+
+
+def iso(dt):
+    return dt.astimezone(timezone.utc).isoformat(timespec="seconds") if dt else None
+
+
+def clean(text, limit=500):
+    text = html.unescape(text or "")
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = re.sub(r"\s+", " ", html.unescape(text)).strip()
+    return text if len(text) <= limit else text[: limit - 1].rstrip() + "…"
+
+
+def norm_status(value):
+    return re.sub(r"[^a-z]", "", (value or "").lower())
+
+
+def is_ok(value):
+    return norm_status(value) in OK_STATUSES
+
+
+def fetch(name, fixtures=None):
+    """คืนข้อความดิบ หรือ raise Problem"""
+    if fixtures is not None:
+        path = Path(fixtures) / f"{name}.txt"
+        if not path.exists():
+            raise Problem("network", "ไม่มีไฟล์ fixture")
+        text = path.read_text(encoding="utf-8")
+        m = re.match(r"HTTP (\d{3})", text)
+        if m:
+            code = int(m.group(1))
+            raise Problem("blocked" if code in (401, 403, 429) else "http_error", f"HTTP {code}")
+        return text
+    req = urllib.request.Request(SOURCES[name][1], headers={
+        "User-Agent": UA, "Accept": "application/json, application/rss+xml, text/xml, text/html;q=0.8, */*;q=0.5"})
+    try:
+        with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:
+            return resp.read(MAX_BYTES).decode("utf-8", errors="replace")
+    except urllib.error.HTTPError as e:
+        raise Problem("blocked" if e.code in (401, 403, 429) else "http_error", f"HTTP {e.code}")
+    except Exception as e:  # URLError, timeout, reset ฯลฯ
+        raise Problem("network", type(e).__name__)
+
+
+def rss_items(text):
+    try:
+        root = ET.fromstring(text.lstrip("﻿").strip())
+    except ET.ParseError as e:
+        raise Problem("parse", f"XML: {e}")
+    if not root.tag.lower().endswith("rss") and root.find(".//channel") is None:
+        raise Problem("shape", "ไม่พบ <channel>")
+    out = []
+    for item in root.iter("item"):
+        get = lambda tag: (item.findtext(tag) or "").strip()
+        out.append({"title": get("title"), "link": get("link"), "guid": get("guid") or get("link") + get("title"),
+                    "pub": parse_dt(get("pubDate")), "desc": get("description"), "status": get("status")})
+    return out
+
+
+# ---------------------------------------------------------------- ตัวอ่านแต่ละแหล่ง
+def read_ms_json(text):
+    try:
+        data = json.loads(text)
+    except ValueError as e:
+        raise Problem("parse", f"JSON: {e}")
+    if isinstance(data, list):
+        if not data:
+            return {"ok": True, "status": "ไม่มีประกาศ", "title": "", "summary": "", "updated": None}
+        data = data[0]
+    if not isinstance(data, dict) or "Status" not in data:
+        raise Problem("shape", "ไม่พบ field Status")
+    return {"ok": is_ok(data.get("Status")), "status": str(data.get("Status")),
+            "title": clean(data.get("Title"), 250), "summary": clean(data.get("Message")),
+            "updated": parse_dt(data.get("LastUpdatedTime") or data.get("AuthoredDateTime"))}
+
+
+def read_ms_rss(text):
+    items = rss_items(text)
+    if not items:
+        return {"ok": True, "status": "ไม่มีประกาศ", "title": "", "summary": "", "updated": None}
+    bad = [i for i in items if i["status"] and not is_ok(i["status"])]
+    if not bad and not any(i["status"] for i in items):
+        raise Problem("shape", "ไม่พบ <status> ใน item")
+    it = (bad or items)[0]
+    return {"ok": not bad, "status": it["status"], "title": clean(it["title"], 250),
+            "summary": clean(it["desc"]), "updated": it["pub"]}
+
+
+def read_consumer(text):
+    try:
+        data = json.loads(text)
+    except ValueError as e:
+        raise Problem("parse", f"JSON: {e}")
+    if isinstance(data, dict):
+        lists = [v for v in data.values() if isinstance(v, list)]
+        data = lists[0] if lists else [data]
+    rows = [r for r in data if isinstance(r, dict)] if isinstance(data, list) else []
+    out = {}
+    for r in rows:
+        low = {k.lower(): v for k, v in r.items()}
+        if "status" not in low:
+            continue
+        name = next((str(low[k]) for k in ("servicename", "service", "workload", "name", "id", "title") if low.get(k)), "")
+        if name:
+            out[clean(name, 80)] = {"status": str(low["status"]), "title": clean(str(low.get("title") or ""), 200)}
+    if not out:
+        raise Problem("shape", "ไม่พบรายการบริการที่มี Status")
+    return out
+
+
+def aws_parts(guid):
+    frag = guid.split("#", 1)[-1]
+    m = re.match(r"^(?P<svc>.+?)(?:-(?P<region>[a-z]{2,3}(?:-gov|-iso[a-z]?)?-[a-z]+-\d+))?_(?P<ts>\d+)$", frag)
+    if not m:
+        return frag, "global"
+    return m.group("svc"), m.group("region") or "global"
+
+
+def find_incident_id(page, title):
+    """หา ID แบบ EX1234567 ที่คู่กับ title เดียวกันในหน้า UPenn"""
+    want = re.sub(r"\s+", " ", title).strip().lower()[:70]
+    if not want:
+        return None
+    flat = clean(page, limit=len(page))
+    for m in re.finditer(r"\b([A-Z]{2}\d{5,8})\s*:\s*", flat):
+        if flat[m.end(): m.end() + 200].lower().startswith(want):
+            return m.group(1)
+    return None
+
+
+# ---------------------------------------------------------------- Discord
+def send_discord(webhook, embeds, dry_run):
+    for i in range(0, len(embeds), 10):
+        chunk = embeds[i: i + 10]
+        if dry_run:
+            for e in chunk:
+                print(f"\n--- [{e['title']}]\n{e.get('description', '')}")
+                for f in e.get("fields", []):
+                    print(f"  {f['name']}: {f['value']}")
+                if e.get("footer"):
+                    print(f"  ({e['footer']['text']})")
+            continue
+        body = json.dumps({"username": "cloud-status-watch", "embeds": chunk}).encode("utf-8")
+        for attempt in (1, 2, 3):
+            req = urllib.request.Request(webhook, data=body, method="POST",
+                                         headers={"Content-Type": "application/json", "User-Agent": UA})
+            try:
+                urllib.request.urlopen(req, timeout=TIMEOUT).read()
+                break
+            except urllib.error.HTTPError as e:
+                if e.code == 429 and attempt < 3:
+                    time.sleep(min(float(e.headers.get("Retry-After", "2")), 15))
+                    continue
+                raise
+        time.sleep(0.6)
+
+
+def embed(kind, title, desc="", fields=(), url=None, footer=None):
+    e = {"title": title[:250], "description": desc[:3500], "color": COLOR[kind],
+         "fields": [{"name": n, "value": str(v)[:1000] or "-", "inline": inline} for n, v, inline in fields]}
+    if url:
+        e["url"] = url
+    if footer:
+        e["footer"] = {"text": footer[:1900]}
+    return e
+
+
+# ---------------------------------------------------------------- main
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--dry-run", action="store_true", help="พิมพ์ข้อความแทนการส่ง Discord และไม่บันทึก state/log")
+    ap.add_argument("--fixtures", help="อ่านข้อมูลจากโฟลเดอร์นี้แทนการเรียกเว็บ (ใช้ทดสอบ)")
+    ap.add_argument("--state-dir", default="state")
+    ap.add_argument("--log-dir", default="logs")
+    ap.add_argument("--now", help="กำหนดเวลาปัจจุบัน (ISO 8601) สำหรับทดสอบ")
+    ap.add_argument("--save", action="store_true", help="ใช้คู่กับ --dry-run เพื่อบันทึก state/log ด้วย")
+    args = ap.parse_args()
+
+    now = parse_dt(args.now) if args.now else datetime.now(timezone.utc)
+    webhook = os.environ.get("DISCORD_WEBHOOK_URL", "").strip()
+    if not webhook and not args.dry_run:
+        sys.exit("ไม่พบ DISCORD_WEBHOOK_URL — ตั้งค่าใน GitHub Secrets หรือใช้ --dry-run")
+    aws_filter = [t.strip().lower() for t in os.environ.get("AWS_ALERT_FILTER", "").split(",") if t.strip()]
+
+    state_path = Path(args.state_dir) / "state.json"
+    first_run = not state_path.exists()
+    state = {} if first_run else json.loads(state_path.read_text(encoding="utf-8"))
+    health = state.setdefault("health", {})
+
+    embeds, logs, problems, readings = [], [], {}, {}
+
+    def log(kind, source, **kw):
+        logs.append({"ts_utc": iso(now), "ts_ict": now.astimezone(ICT).isoformat(timespec="seconds"),
+                     "type": kind, "source": source, **kw})
+
+    def load(name, reader):
+        try:
+            return reader(fetch(name, args.fixtures))
+        except Problem as p:
+            problems[name] = p
+            return None
+
+    # ---- Microsoft 365 (enterprise): รวม JSON + RSS เป็นเหตุการณ์เดียว
+    mj, mr = load("ms_json", read_ms_json), load("ms_rss", read_ms_rss)
+    recs = [(n, r) for n, r in (("JSON", mj), ("RSS", mr)) if r]
+    prev = state.get("ms365", {"active": False})
+    if recs:
+        bad = [(n, r) for n, r in recs if not r["ok"]]
+        active = bool(bad)
+        src, rec = max(bad or recs, key=lambda x: x[1]["updated"] or datetime.min.replace(tzinfo=timezone.utc))
+        # หัวข้อ: ใช้ของ JSON ก่อน เพราะเป็นชื่อ incident จริง (RSS ใช้ชื่อกลาง ๆ ว่า Microsoft Admin Center)
+        title = mj["title"] if (mj and not mj["ok"] and mj["title"]) else rec["title"]
+        cur = {"active": active, "status": rec["status"], "title": title,
+               "updated": iso(rec["updated"]), "via": src, "incident_id": None}
+        readings["Microsoft 365"] = f"{rec['status']} (จากช่องทาง {src})" if active else "ปกติ"
+        if mj and mr:
+            if mj["ok"] != mr["ok"]:
+                problems["ms_crosscheck"] = Problem("mismatch_status", f"JSON={mj['status']} / RSS={mr['status']}")
+            elif active and mj["updated"] and mr["updated"] and \
+                    abs((mj["updated"] - mr["updated"]).total_seconds()) > MISMATCH_MINUTES * 60:
+                problems["ms_crosscheck"] = Problem(
+                    "mismatch_time", f"JSON {fmt_ict(mj['updated'])} / RSS {fmt_ict(mr['updated'])}")
+        if active and rec["updated"] and (now - rec["updated"]) > timedelta(hours=STALE_HOURS):
+            problems["ms_stale"] = Problem("stale", f"update ล่าสุด {fmt_ict(rec['updated'])}")
+
+        kind = None
+        if active and not prev.get("active"):
+            kind = "new"
+        elif active and any(prev.get(k) != cur[k] for k in ("status", "title", "updated")):
+            kind = "update"
+        elif not active and prev.get("active"):
+            kind = "resolved"
+        if active:
+            cur["incident_id"] = prev.get("incident_id") if prev.get("title") == cur["title"] else None
+            if kind and not cur["incident_id"]:
+                try:
+                    cur["incident_id"] = find_incident_id(fetch("upenn", args.fixtures), cur["title"])
+                except Problem as p:
+                    problems["upenn"] = p
+        if kind:
+            head = {"new": "🔴 Microsoft 365: พบ incident ใหม่", "update": "🟠 Microsoft 365: มี update",
+                    "resolved": "🟢 Microsoft 365: กลับสู่สถานะปกติ"}[kind]
+            shown = cur if active else prev
+            fields = [("สถานะ", cur["status"], True),
+                      ("Incident ID", shown.get("incident_id") or "ไม่มีในแหล่งข้อมูลสาธารณะ", True),
+                      ("Update ล่าสุดของต้นทาง", fmt_ict(parse_dt(cur["updated"])), False),
+                      ("ช่องทางที่ update ล่าสุด", src, True)]
+            embeds.append(embed(kind, head, f"**{shown.get('title') or '-'}**\n{rec['summary'] if active else ''}",
+                                fields, PUBLIC_PAGE["ms365"]))
+            log(kind, "ms365", status=cur["status"], title=shown.get("title"), updated=cur["updated"],
+                incident_id=shown.get("incident_id"), via=src, notified=True)
+        state["ms365"] = cur
+    else:
+        readings["Microsoft 365"] = "อ่านไม่ได้ทั้งสองช่องทาง"
+
+    # ---- Microsoft 365 consumer / Outlook.com
+    cons = load("ms_consumer", read_consumer)
+    if cons is not None:
+        prev_c = state.get("ms_consumer", {})
+        down = [n for n, v in cons.items() if not is_ok(v["status"])]
+        readings["Microsoft 365 consumer"] = f"มีปัญหา {len(down)} จาก {len(cons)} บริการ" if down else f"ปกติ ({len(cons)} บริการ)"
+        for name, v in sorted(cons.items()):
+            was = prev_c.get(name)
+            if was == v["status"] or (was is None and is_ok(v["status"])):
+                continue
+            kind = "resolved" if is_ok(v["status"]) else ("update" if was and not is_ok(was) else "new")
+            head = {"new": "🔴", "update": "🟠", "resolved": "🟢"}[kind] + f" Microsoft consumer: {name}"
+            embeds.append(embed(kind, head, v["title"], [("สถานะ", v["status"], True), ("สถานะก่อนหน้า", was or "-", True)],
+                                PUBLIC_PAGE["ms_consumer"]))
+            log(kind, "ms_consumer", key=name, status=v["status"], previous=was, title=v["title"], notified=True)
+        state["ms_consumer"] = {n: v["status"] for n, v in cons.items()}
+
+    # ---- Azure (feed ว่าง = ไม่มีเหตุ)
+    az = load("azure", rss_items)
+    if az is not None:
+        prev_a = state.get("azure", {})
+        cur_a = {i["guid"]: {"title": clean(i["title"], 250), "pub": iso(i["pub"])} for i in az}
+        readings["Azure"] = f"มีประกาศ {len(cur_a)} รายการ" if cur_a else "ปกติ (feed ว่าง)"
+        for i in az:
+            was, me = prev_a.get(i["guid"]), cur_a[i["guid"]]
+            if was == me:
+                continue
+            kind = "update" if was else "new"
+            embeds.append(embed(kind, ("🟠 Azure: มี update" if was else "🔴 Azure: พบประกาศใหม่"),
+                                f"**{me['title']}**\n{clean(i['desc'])}",
+                                [("เวลาประกาศ", fmt_ict(i["pub"]), False)], i["link"] or PUBLIC_PAGE["azure"]))
+            log(kind, "azure", key=i["guid"], title=me["title"], updated=me["pub"], notified=True)
+        for guid, was in prev_a.items():
+            if guid not in cur_a:
+                embeds.append(embed("resolved", "🟢 Azure: ประกาศถูกถอดออกจาก feed", f"**{was['title']}**",
+                                    url=PUBLIC_PAGE["azure"]))
+                log("resolved", "azure", key=guid, title=was["title"], notified=True)
+        state["azure"] = cur_a
+
+    # ---- AWS (feed เป็นประวัติ update — แจ้งเฉพาะรายการที่ยังไม่เคยเห็น)
+    aws = load("aws", rss_items)
+    if aws is not None:
+        seeded = "aws" in state
+        seen = set(state.get("aws", {}).get("seen", []))
+        fresh = sorted((i for i in aws if i["guid"] not in seen),
+                       key=lambda i: i["pub"] or datetime.min.replace(tzinfo=timezone.utc))
+        sent = skipped = 0
+        for i in fresh if seeded else []:
+            svc, region = aws_parts(i["guid"])
+            hay = " ".join((i["guid"], i["title"], i["desc"])).lower()
+            too_old = bool(i["pub"]) and (now - i["pub"]) > timedelta(hours=AWS_MAX_AGE_HOURS)
+            passes = region == "global" or not aws_filter or any(t in hay for t in aws_filter)
+            notify = passes and not too_old and sent < AWS_MAX_ALERTS
+            reason = None if notify else ("old" if too_old else "filtered" if not passes else "cap")
+            if notify:
+                done = "operating normally" in i["title"].lower() or "[resolved]" in i["title"].lower()
+                kind = "resolved" if done else "new"
+                embeds.append(embed(kind, ("🟢" if done else "🔴") + f" AWS: {svc} ({region})",
+                                    f"**{clean(i['title'], 250)}**\n{clean(i['desc'])}",
+                                    [("Region", region, True), ("Service", svc, True),
+                                     ("เวลาประกาศ", fmt_ict(i["pub"]), False)], PUBLIC_PAGE["aws"]))
+                sent += 1
+            else:
+                skipped += reason == "cap"
+            log("aws", "aws", key=i["guid"], region=region, service=svc, title=clean(i["title"], 250),
+                updated=iso(i["pub"]), notified=notify, skip_reason=reason)
+        if skipped:
+            embeds.append(embed("info", f"AWS: มีอีก {skipped} รายการที่ไม่ได้แสดง", "ดูรายละเอียดในไฟล์ log หรือหน้า AWS Health",
+                                url=PUBLIC_PAGE["aws"]))
+        readings["AWS"] = f"feed มี {len(aws)} รายการ, ใหม่รอบนี้ {len(fresh) if seeded else 0}"
+        state["aws"] = {"seen": sorted(i["guid"] for i in aws)}
+
+    # ---- Remark เรื่องสุขภาพของแหล่งข้อมูล
+    label = {**{k: v[0] for k, v in SOURCES.items()},
+             "ms_crosscheck": "Microsoft 365 (เทียบ JSON กับ RSS)", "ms_stale": "Microsoft 365 (ความสดของข้อมูล)"}
+    for name in label:
+        p, was = problems.get(name), health.get(name, {})
+        if p is None:
+            # upenn ถูกเรียกเฉพาะบางรอบ จึงไม่ถือว่า "หาย" จนกว่าจะเรียกสำเร็จจริง
+            if name == "upenn" and not (state.get("ms365", {}).get("incident_id")):
+                continue
+            if was.get("alerted"):
+                embeds.append(embed("resolved", f"🟢 Remark ปิด: {label[name]}", "แหล่งข้อมูลกลับมาอ่านได้ตามปกติ"))
+                log("remark_cleared", name, code=was.get("code"))
+            health.pop(name, None)
+            continue
+        n = min(was.get("n", 0) + 1 if was.get("code") == p.code else 1, FAIL_THRESHOLD)
+        alerted = was.get("alerted", False) and was.get("code") == p.code
+        if not alerted and n >= (1 if p.code in IMMEDIATE else FAIL_THRESHOLD):
+            embeds.append(embed("remark", f"⚠️ Remark: {label[name]}", PROBLEM_TEXT[p.code],
+                                [("รายละเอียด", p.detail or "-", False)],
+                                footer="การแจ้งเตือนจากแหล่งนี้อาจไม่ครบหรือล่าช้า จนกว่า remark นี้จะปิด"))
+            log("remark", name, code=p.code, detail=p.detail)
+            alerted = True
+        health[name] = {"code": p.code, "n": n, "alerted": alerted}
+
+    open_remarks = [f"{label[k]}: {PROBLEM_TEXT[v['code']]}" for k, v in health.items() if v.get("alerted")]
+    if open_remarks:
+        for e in embeds:
+            if e["color"] in (COLOR["new"], COLOR["update"]) and "footer" not in e:
+                e["footer"] = {"text": ("Remark ที่ยังเปิดอยู่ — " + " | ".join(open_remarks))[:1900]}
+
+    if first_run:
+        lines = "\n".join(f"• **{k}**: {v}" for k, v in readings.items())
+        embeds.insert(0, embed("info", "🔵 cloud-status-watch เริ่มเฝ้าระวัง",
+                               f"ค่าที่อ่านได้ในรอบแรก ({fmt_ict(now)})\n{lines}"))
+        log("startup", "system", readings=readings)
+
+    # ---- ส่งก่อน แล้วค่อยบันทึก (ถ้าส่งไม่สำเร็จ รอบหน้าจะลองใหม่)
+    if embeds:
+        send_discord(webhook, embeds, args.dry_run)
+    if args.dry_run and not args.save:
+        print(f"\n[dry-run] {len(embeds)} ข้อความ, {len(logs)} บรรทัด log, ไม่บันทึก state")
+        return
+    state["last_run_date"] = now.astimezone(ICT).date().isoformat()
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    state_path.write_text(json.dumps(state, ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    if logs:
+        log_path = Path(args.log_dir) / f"events-{now.astimezone(ICT):%Y-%m}.jsonl"
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        with log_path.open("a", encoding="utf-8") as fh:
+            for row in logs:
+                fh.write(json.dumps(row, ensure_ascii=False) + "\n")
+    print(f"ส่ง {len(embeds)} ข้อความ, บันทึก log {len(logs)} บรรทัด")
+
+
+if __name__ == "__main__":
+    main()

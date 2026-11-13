@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:a10="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Microsoft Admin Center Status</title><link>https://status.cloud.microsoft/</link>
+<item><guid isPermaLink="false">00000000-0000-0000-0000-000000000002</guid><link>https://status.cloud.microsoft/</link><title>Microsoft Admin Center</title><description>&lt;div&gt;Sample: users may be unable to connect to multiple services.&lt;/div&gt;</description><pubDate>Fri, 13 Nov 2026 04:57:55 Z</pubDate><status>ServiceDegradation</status></item>
+</channel></rss>

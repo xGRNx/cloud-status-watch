@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel><title>Amazon Web Services Service Status</title><link>https://status.aws.amazon.com/</link>
+<item><title>Service disruption: Sample increased error rates</title><link>https://status.aws.amazon.com/</link><pubDate>Tue, 15 Sep 2026 03:27:10 PDT</pubDate><guid isPermaLink="false">https://status.aws.amazon.com/#multipleservices-me-central-1_1789468030</guid><description>Sample old item.</description></item>
+</channel></rss>
