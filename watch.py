@@ -23,7 +23,7 @@ from pathlib import Path
 
 # ---------------------------------------------------------------- ค่าตั้งต้น
 ICT = timezone(timedelta(hours=7))
-UA = "cloud-status-watch/1.0 (personal status monitor)"
+UA = "cloud-status-watch/0.2 (personal status monitor)"
 TIMEOUT = 25
 MAX_BYTES = 3_000_000
 
@@ -112,6 +112,42 @@ def clean(text, limit=500):
     return text if len(text) <= limit else text[: limit - 1].rstrip() + "…"
 
 
+def split_message(raw):
+    """แยกประกาศของ Microsoft เป็น (ผลกระทบ, สถานะปัจจุบัน, เวลา update ถัดไป)"""
+    text = clean(raw, limit=20000)
+    labels = ["User impact", "More info", "Current status", "Next update by",
+              "Scope of impact", "Start time", "Root cause", "Title"]
+
+    def part(label):
+        stops = "|".join(l for l in labels if l != label)
+        m = re.search(label + r"\s*:\s*(.+?)(?=\s(?:" + stops + r")\s*:|$)", text, re.I)
+        return m.group(1).strip() if m else ""
+    return part("User impact"), part("Current status"), part("Next update by")
+
+
+def first_sentence(text):
+    return re.split(r"(?<=[.!?])\s", text.strip(), maxsplit=1)[0].rstrip(". ") if text else ""
+
+
+def fmt_next(text):
+    """'Friday, November 13, 2026, at 10:00 AM UTC' -> เวลาไทย (ถ้าอ่านไม่ได้คืนข้อความเดิม)"""
+    m = re.search(r"([A-Z][a-z]+ \d{1,2}, \d{4}),? at (\d{1,2}:\d{2} [AP]M) UTC", text or "")
+    if m:
+        try:
+            dt = datetime.strptime(f"{m.group(1)} {m.group(2)}", "%B %d, %Y %I:%M %p")
+            return fmt_ict(dt.replace(tzinfo=timezone.utc))
+        except ValueError:
+            pass
+    return text or "ไม่ระบุ"
+
+
+def post_fields(title, message):
+    """คืน (หัวข้อ, สรุป, update ถัดไป) — ถ้า Title ว่าง ใช้ประโยคแรกของ User impact แทน"""
+    impact, current, nxt = split_message(message)
+    return (clean(title, 250) or first_sentence(impact)[:250],
+            clean(current, 700) or clean(message, 500), nxt)
+
+
 def norm_status(value):
     return re.sub(r"[^a-z]", "", (value or "").lower())
 
@@ -166,25 +202,28 @@ def read_ms_json(text):
         raise Problem("parse", f"JSON: {e}")
     if isinstance(data, list):
         if not data:
-            return {"ok": True, "status": "ไม่มีประกาศ", "title": "", "summary": "", "updated": None}
+            return {"ok": True, "status": "ไม่มีประกาศ", "title": "", "summary": "", "next": "", "updated": None}
         data = data[0]
     if not isinstance(data, dict) or "Status" not in data:
         raise Problem("shape", "ไม่พบ field Status")
+    title, summary, nxt = post_fields(data.get("Title"), data.get("Message"))
     return {"ok": is_ok(data.get("Status")), "status": str(data.get("Status")),
-            "title": clean(data.get("Title"), 250), "summary": clean(data.get("Message")),
+            "title": title, "summary": summary, "next": nxt,
             "updated": parse_dt(data.get("LastUpdatedTime") or data.get("AuthoredDateTime"))}
 
 
 def read_ms_rss(text):
     items = rss_items(text)
     if not items:
-        return {"ok": True, "status": "ไม่มีประกาศ", "title": "", "summary": "", "updated": None}
+        return {"ok": True, "status": "ไม่มีประกาศ", "title": "", "summary": "", "next": "", "updated": None}
     bad = [i for i in items if i["status"] and not is_ok(i["status"])]
     if not bad and not any(i["status"] for i in items):
         raise Problem("shape", "ไม่พบ <status> ใน item")
     it = (bad or items)[0]
-    return {"ok": not bad, "status": it["status"], "title": clean(it["title"], 250),
-            "summary": clean(it["desc"]), "updated": it["pub"]}
+    # <title> ของ RSS เป็นชื่อกลาง ๆ (Microsoft Admin Center) จึงดึงหัวข้อจากเนื้อความแทน
+    title, summary, nxt = post_fields("", it["desc"])
+    return {"ok": not bad, "status": it["status"], "title": title or clean(it["title"], 250),
+            "summary": summary, "next": nxt, "updated": it["pub"]}
 
 
 def read_consumer(text):
@@ -201,9 +240,12 @@ def read_consumer(text):
         low = {k.lower(): v for k, v in r.items()}
         if "status" not in low:
             continue
-        name = next((str(low[k]) for k in ("servicename", "service", "workload", "name", "id", "title") if low.get(k)), "")
+        name = next((str(low[k]) for k in ("servicedisplayname", "serviceworkloadname", "servicename", "service",
+                                            "workload", "name") if low.get(k)), "")
         if name:
-            out[clean(name, 80)] = {"status": str(low["status"]), "title": clean(str(low.get("title") or ""), 200)}
+            title, summary, nxt = post_fields(low.get("title") or "", low.get("message") or "")
+            out[clean(name, 80)] = {"status": str(low["status"]), "title": title, "summary": summary, "next": nxt,
+                                    "updated": parse_dt(str(low.get("lastupdatedtime") or ""))}
     if not out:
         raise Problem("shape", "ไม่พบรายการบริการที่มี Status")
     return out
@@ -344,9 +386,11 @@ def main():
             shown = cur if active else prev
             fields = [("สถานะ", cur["status"], True),
                       ("Incident ID", shown.get("incident_id") or "ไม่มีในแหล่งข้อมูลสาธารณะ", True),
-                      ("Update ล่าสุดของต้นทาง", fmt_ict(parse_dt(cur["updated"])), False),
-                      ("ช่องทางที่ update ล่าสุด", src, True)]
-            embeds.append(embed(kind, head, f"**{shown.get('title') or '-'}**\n{rec['summary'] if active else ''}",
+                      ("Update ล่าสุดของต้นทาง", fmt_ict(parse_dt(cur["updated"])), False)]
+            if active:
+                fields.append(("Update ถัดไป (ตามประกาศ)", fmt_next(rec.get("next")), False))
+            fields.append(("ช่องทางที่ update ล่าสุด", src, True))
+            embeds.append(embed(kind, head, f"**{shown.get('title') or '(ต้นทางไม่ระบุหัวข้อ)'}**\n{rec['summary'] if active else ''}",
                                 fields, PUBLIC_PAGE["ms365"]))
             log(kind, "ms365", status=cur["status"], title=shown.get("title"), updated=cur["updated"],
                 incident_id=shown.get("incident_id"), via=src, notified=True)
@@ -366,8 +410,12 @@ def main():
                 continue
             kind = "resolved" if is_ok(v["status"]) else ("update" if was and not is_ok(was) else "new")
             head = {"new": "🔴", "update": "🟠", "resolved": "🟢"}[kind] + f" Microsoft consumer: {name}"
-            embeds.append(embed(kind, head, v["title"], [("สถานะ", v["status"], True), ("สถานะก่อนหน้า", was or "-", True)],
-                                PUBLIC_PAGE["ms_consumer"]))
+            fields = [("สถานะ", v["status"], True), ("สถานะก่อนหน้า", was or "-", True)]
+            if not is_ok(v["status"]):
+                fields += [("Update ล่าสุดของต้นทาง", fmt_ict(v["updated"]), False),
+                           ("Update ถัดไป (ตามประกาศ)", fmt_next(v["next"]), False)]
+            desc = f"**{v['title']}**\n{v['summary']}" if v["title"] else v["summary"]
+            embeds.append(embed(kind, head, desc, fields, PUBLIC_PAGE["ms_consumer"]))
             log(kind, "ms_consumer", key=name, status=v["status"], previous=was, title=v["title"], notified=True)
         state["ms_consumer"] = {n: v["status"] for n, v in cons.items()}
 
