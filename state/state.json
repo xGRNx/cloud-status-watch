@@ -46,7 +46,8 @@
  "last_run_date": "2026-11-13",
  "ms365": {
   "active": true,
-  "incident_id": null,
+  "id_tries": 1,
+  "incident_id": "MO1550821",
   "status": "Service degradation",
   "title": "Users may be unable to connect to multiple Microsoft 365 services",
   "updated": "2026-11-13T09:14:20+00:00",
