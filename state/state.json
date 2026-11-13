@@ -42,13 +42,7 @@
   ]
  },
  "azure": {},
- "health": {
-  "ms_rss": {
-   "alerted": false,
-   "code": "network",
-   "n": 1
-  }
- },
+ "health": {},
  "last_run_date": "2026-11-14",
  "ms365": {
   "active": true,
