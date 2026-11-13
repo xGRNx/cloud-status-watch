@@ -1,0 +1,39 @@
+name: cloud-status-watch
+
+on:
+  schedule:
+    - cron: "3-59/10 * * * *"   # ทุก 10 นาที (เลี่ยงนาทีที่ 0 ซึ่งคิวของ GitHub มักแน่น)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cloud-status-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run watcher
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          AWS_ALERT_FILTER: ${{ secrets.AWS_ALERT_FILTER }}
+        run: python3 watch.py
+
+      - name: Commit state and log
+        run: |
+          git config user.name "cloud-status-watch"
+          git config user.email "actions@users.noreply.github.com"
+          git add state logs 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "no changes"
+          else
+            git commit -m "watch: $(date -u +%Y-%m-%dT%H:%MZ)"
+            git pull --rebase --autostash
+            git push
+          fi
