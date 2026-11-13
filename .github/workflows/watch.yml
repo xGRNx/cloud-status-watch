@@ -2,7 +2,7 @@ name: cloud-status-watch
 
 on:
   schedule:
-    - cron: "3-59/10 * * * *"   # ทุก 10 นาที (เลี่ยงนาทีที่ 0 ซึ่งคิวของ GitHub มักแน่น)
+    - cron: "3,13,23,33,43,53 * * * *"   # ทุก 10 นาที (เลี่ยงนาทีที่ 0 ซึ่งคิวของ GitHub มักแน่น)
   workflow_dispatch:
 
 permissions:
