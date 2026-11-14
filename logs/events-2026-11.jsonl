@@ -18,3 +18,4 @@
 {"ts_utc": "2026-11-14T05:10:11+00:00", "ts_ict": "2026-11-14T12:10:11+07:00", "type": "source_added", "source": "claude", "reading": "ปกติ (ไม่มี incident เปิดอยู่, feed มี 25 รายการ)"}
 {"ts_utc": "2026-11-14T05:50:11+00:00", "ts_ict": "2026-11-14T12:50:11+07:00", "type": "resolved", "source": "ms365", "status": "Available", "title": "Users may be unable to connect to multiple Microsoft 365 services", "updated": "2026-11-14T05:50:00+00:00", "incident_id": "MO1550821", "via": "JSON", "notified": true}
 {"ts_utc": "2026-11-14T05:50:11+00:00", "ts_ict": "2026-11-14T12:50:11+07:00", "type": "remark_cleared", "source": "ms_stale", "code": "stale"}
+{"ts_utc": "2026-11-14T06:20:12+00:00", "ts_ict": "2026-11-14T13:20:12+07:00", "type": "source_added", "source": "upenn", "reading": "ไม่มี incident ที่เข้าตัวกรองเปิดอยู่ (ทั้งหน้า 100 รายการ)"}

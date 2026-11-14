@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-14T06:10:00+00:00",
+  "updated": "2026-11-14T06:20:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
@@ -190,5 +190,407 @@
   "OneDrive": "Operational",
   "Outlook.com": "Operational",
   "Phone Link": "Operational"
+ },
+ "upenn_feed": {
+  "CP1447275": {
+   "s": "serviceDegradation",
+   "u": "2026-11-13T21:39:46+00:00"
+  },
+  "CP1510883": {
+   "s": "serviceRestored",
+   "u": "2026-10-29T17:24:10+00:00"
+  },
+  "CP1515501": {
+   "s": "serviceRestored",
+   "u": "2026-10-20T05:17:23+00:00"
+  },
+  "CP1517145": {
+   "s": "serviceRestored",
+   "u": "2026-10-20T16:25:38+00:00"
+  },
+  "CP1519553": {
+   "s": "serviceRestored",
+   "u": "2026-10-22T18:52:55+00:00"
+  },
+  "CP1527498": {
+   "s": "postIncidentReviewPublished",
+   "u": "2026-11-12T07:07:07+00:00"
+  },
+  "CP1528078": {
+   "s": "serviceDegradation",
+   "u": "2026-11-09T23:14:11+00:00"
+  },
+  "CP1528420": {
+   "s": "serviceRestored",
+   "u": "2026-10-29T18:30:36+00:00"
+  },
+  "CP1528503": {
+   "s": "serviceRestored",
+   "u": "2026-10-28T12:48:23+00:00"
+  },
+  "CP1535460": {
+   "s": "serviceRestored",
+   "u": "2026-11-02T19:13:36+00:00"
+  },
+  "CP1540142": {
+   "s": "postIncidentReviewPublished",
+   "u": "2026-11-13T02:34:14+00:00"
+  },
+  "CP1540672": {
+   "s": "serviceRestored",
+   "u": "2026-11-10T01:15:09+00:00"
+  },
+  "CR1550885": {
+   "s": "serviceRestored",
+   "u": "2026-11-13T01:25:41+00:00"
+  },
+  "CR1551339": {
+   "s": "serviceRestored",
+   "u": "2026-11-13T15:22:49+00:00"
+  },
+  "CW1507178": {
+   "s": "postIncidentReviewPublished",
+   "u": "2026-10-22T13:19:08+00:00"
+  },
+  "CW1515013": {
+   "s": "serviceRestored",
+   "u": "2026-10-19T14:20:37+00:00"
+  },
+  "CW1517097": {
+   "s": "serviceRestored",
+   "u": "2026-10-21T04:51:15+00:00"
+  },
+  "CW1523046": {
+   "s": "serviceRestored",
+   "u": "2026-10-23T23:19:37+00:00"
+  },
+  "CW1530567": {
+   "s": "postIncidentReviewPublished",
+   "u": "2026-11-12T00:47:15+00:00"
+  },
+  "CW1530649": {
+   "s": "postIncidentReviewPublished",
+   "u": "2026-11-12T07:06:34+00:00"
+  },
+  "CW1548957": {
+   "s": "serviceRestored",
+   "u": "2026-11-11T18:29:24+00:00"
+  },
+  "DV1549907": {
+   "s": "serviceRestored",
+   "u": "2026-11-12T07:19:29+00:00"
+  },
+  "DV1550921": {
+   "s": "serviceRestored",
+   "u": "2026-11-12T22:00:05+00:00"
+  },
+  "DZ1509195": {
+   "s": "serviceRestored",
+   "u": "2026-10-15T19:24:36+00:00"
+  },
+  "DZ1515123": {
+   "s": "serviceRestored",
+   "u": "2026-10-23T16:26:37+00:00"
+  },
+  "DZ1519662": {
+   "s": "serviceRestored",
+   "u": "2026-10-22T13:16:27+00:00"
+  },
+  "DZ1527734": {
+   "s": "serviceRestored",
+   "u": "2026-10-27T18:33:04+00:00"
+  },
+  "DZ1528748": {
+   "s": "serviceRestored",
+   "u": "2026-10-29T14:36:51+00:00"
+  },
+  "DZ1528963": {
+   "s": "serviceRestored",
+   "u": "2026-10-30T18:35:18+00:00"
+  },
+  "DZ1530894": {
+   "s": "serviceRestored",
+   "u": "2026-10-30T01:42:25+00:00"
+  },
+  "EX1477761": {
+   "s": "serviceRestored",
+   "u": "2026-10-22T17:52:02+00:00"
+  },
+  "EX1478331": {
+   "s": "postIncidentReviewPublished",
+   "u": "2026-11-12T00:05:57+00:00"
+  },
+  "EX1479349": {
+   "s": "serviceRestored",
+   "u": "2026-11-02T18:50:30+00:00"
+  },
+  "EX1483540": {
+   "s": "serviceRestored",
+   "u": "2026-10-19T09:36:50+00:00"
+  },
+  "EX1490154": {
+   "s": "serviceRestored",
+   "u": "2026-11-11T16:15:21+00:00"
+  },
+  "EX1500900": {
+   "s": "postIncidentReviewPublished",
+   "u": "2026-10-19T21:04:26+00:00"
+  },
+  "EX1508985": {
+   "s": "serviceRestored",
+   "u": "2026-10-17T20:46:45+00:00"
+  },
+  "EX1519316": {
+   "s": "serviceRestored",
+   "u": "2026-10-28T00:09:34+00:00"
+  },
+  "EX1527500": {
+   "s": "serviceRestored",
+   "u": "2026-10-28T00:55:49+00:00"
+  },
+  "EX1528992": {
+   "s": "serviceRestored",
+   "u": "2026-10-29T20:32:26+00:00"
+  },
+  "EX1531593": {
+   "s": "serviceRestored",
+   "u": "2026-11-02T02:31:34+00:00"
+  },
+  "EX1532233": {
+   "s": "serviceRestored",
+   "u": "2026-10-30T22:24:42+00:00"
+  },
+  "EX1537187": {
+   "s": "serviceRestored",
+   "u": "2026-11-04T04:03:54+00:00"
+  },
+  "EX1542065": {
+   "s": "serviceDegradation",
+   "u": "2026-11-13T21:33:43+00:00"
+  },
+  "EX1542182": {
+   "s": "serviceRestored",
+   "u": "2026-11-07T02:52:27+00:00"
+  },
+  "EX1545193": {
+   "s": "serviceRestored",
+   "u": "2026-11-10T05:38:11+00:00"
+  },
+  "EX1550543": {
+   "s": "serviceRestored",
+   "u": "2026-11-14T04:15:46+00:00"
+  },
+  "IT1516138": {
+   "s": "serviceRestored",
+   "u": "2026-10-25T17:25:29+00:00"
+  },
+  "IT1549049": {
+   "s": "serviceDegradation",
+   "u": "2026-11-12T01:18:04+00:00"
+  },
+  "IT1549289": {
+   "s": "serviceRestored",
+   "u": "2026-11-12T19:20:00+00:00"
+  },
+  "MO1457843": {
+   "s": "serviceDegradation",
+   "u": "2026-10-31T00:04:58+00:00"
+  },
+  "MO1481173": {
+   "s": "serviceRestored",
+   "u": "2026-10-28T20:44:13+00:00"
+  },
+  "MO1489432": {
+   "s": "serviceDegradation",
+   "u": "2026-11-13T11:09:54+00:00"
+  },
+  "MO1501829": {
+   "s": "serviceRestored",
+   "u": "2026-11-04T12:17:18+00:00"
+  },
+  "MO1505952": {
+   "s": "postIncidentReviewPublished",
+   "u": "2026-10-21T00:08:42+00:00"
+  },
+  "MO1515549": {
+   "s": "serviceRestored",
+   "u": "2026-10-19T20:03:04+00:00"
+  },
+  "MO1522731": {
+   "s": "serviceRestored",
+   "u": "2026-10-29T21:52:27+00:00"
+  },
+  "MO1532211": {
+   "s": "serviceRestored",
+   "u": "2026-11-10T18:59:41+00:00"
+  },
+  "MO1535688": {
+   "s": "serviceDegradation",
+   "u": "2026-11-03T17:44:54+00:00"
+  },
+  "MO1540560": {
+   "s": "serviceRestored",
+   "u": "2026-11-06T01:03:48+00:00"
+  },
+  "MO1547527": {
+   "s": "serviceRestored",
+   "u": "2026-11-11T05:33:06+00:00"
+  },
+  "MO1550821": {
+   "s": "serviceRestored",
+   "u": "2026-11-14T04:17:52+00:00"
+  },
+  "MP1507695": {
+   "s": "serviceDegradation",
+   "u": "2026-11-12T05:09:21+00:00"
+  },
+  "MV1519166": {
+   "s": "serviceRestored",
+   "u": "2026-10-21T16:50:29+00:00"
+  },
+  "MV1522708": {
+   "s": "serviceRestored",
+   "u": "2026-10-23T20:53:48+00:00"
+  },
+  "MV1526068": {
+   "s": "serviceRestored",
+   "u": "2026-10-26T16:51:49+00:00"
+  },
+  "OD1530155": {
+   "s": "serviceRestored",
+   "u": "2026-11-02T15:38:08+00:00"
+  },
+  "OO1508394": {
+   "s": "serviceRestored",
+   "u": "2026-10-15T06:03:11+00:00"
+  },
+  "OO1537414": {
+   "s": "serviceRestored",
+   "u": "2026-11-03T22:57:04+00:00"
+  },
+  "OO1547737": {
+   "s": "serviceRestored",
+   "u": "2026-11-13T07:09:48+00:00"
+  },
+  "OO1550244": {
+   "s": "serviceDegradation",
+   "u": "2026-11-13T22:47:13+00:00"
+  },
+  "OP1505951": {
+   "s": "serviceRestored",
+   "u": "2026-10-16T18:29:53+00:00"
+  },
+  "OP1514821": {
+   "s": "postIncidentReviewPublished",
+   "u": "2026-10-26T20:25:21+00:00"
+  },
+  "OP1549991": {
+   "s": "serviceRestored",
+   "u": "2026-11-12T09:11:11+00:00"
+  },
+  "PB1508905": {
+   "s": "serviceRestored",
+   "u": "2026-10-15T15:41:43+00:00"
+  },
+  "PB1514788": {
+   "s": "serviceRestored",
+   "u": "2026-10-19T14:33:34+00:00"
+  },
+  "PB1527694": {
+   "s": "serviceRestored",
+   "u": "2026-10-28T00:02:23+00:00"
+  },
+  "PB1528889": {
+   "s": "serviceRestored",
+   "u": "2026-10-28T22:29:09+00:00"
+  },
+  "PP1550869": {
+   "s": "serviceRestored",
+   "u": "2026-11-13T16:32:31+00:00"
+  },
+  "SP1503038": {
+   "s": "postIncidentReviewPublished",
+   "u": "2026-10-21T23:54:51+00:00"
+  },
+  "SP1518858": {
+   "s": "serviceRestored",
+   "u": "2026-10-22T19:54:57+00:00"
+  },
+  "SP1535405": {
+   "s": "serviceRestored",
+   "u": "2026-11-03T13:17:54+00:00"
+  },
+  "SP1548842": {
+   "s": "serviceRestored",
+   "u": "2026-11-13T12:38:26+00:00"
+  },
+  "TM1489031": {
+   "s": "serviceRestored",
+   "u": "2026-11-04T22:39:10+00:00"
+  },
+  "TM1492872": {
+   "s": "serviceRestored",
+   "u": "2026-10-16T19:34:20+00:00"
+  },
+  "TM1504581": {
+   "s": "serviceRestored",
+   "u": "2026-11-10T20:15:54+00:00"
+  },
+  "TM1506205": {
+   "s": "serviceRestored",
+   "u": "2026-10-16T04:35:46+00:00"
+  },
+  "TM1508612": {
+   "s": "serviceRestored",
+   "u": "2026-10-16T20:49:06+00:00"
+  },
+  "TM1509890": {
+   "s": "serviceRestored",
+   "u": "2026-10-16T17:32:24+00:00"
+  },
+  "TM1514781": {
+   "s": "serviceRestored",
+   "u": "2026-10-20T01:22:02+00:00"
+  },
+  "TM1517449": {
+   "s": "serviceRestored",
+   "u": "2026-10-26T20:19:08+00:00"
+  },
+  "TM1519335": {
+   "s": "serviceRestored",
+   "u": "2026-10-22T16:50:05+00:00"
+  },
+  "TM1526111": {
+   "s": "postIncidentReviewPublished",
+   "u": "2026-11-03T01:38:33+00:00"
+  },
+  "TM1528936": {
+   "s": "serviceRestored",
+   "u": "2026-10-28T19:18:45+00:00"
+  },
+  "TM1536687": {
+   "s": "serviceRestored",
+   "u": "2026-11-03T17:51:52+00:00"
+  },
+  "TM1537403": {
+   "s": "serviceRestored",
+   "u": "2026-11-03T21:25:16+00:00"
+  },
+  "TM1545775": {
+   "s": "serviceRestored",
+   "u": "2026-11-10T19:47:08+00:00"
+  },
+  "TM1550488": {
+   "s": "serviceRestored",
+   "u": "2026-11-12T17:08:41+00:00"
+  },
+  "TM1551945": {
+   "s": "serviceDegradation",
+   "u": "2026-11-13T21:38:18+00:00"
+  },
+  "WP1539043": {
+   "s": "serviceDegradation",
+   "u": "2026-11-12T23:23:33+00:00"
+  }
  }
 }
