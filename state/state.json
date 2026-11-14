@@ -175,9 +175,9 @@
   "active": false,
   "incident_id": null,
   "status": "Available",
-  "title": "Microsoft Admin Center",
-  "updated": "2026-11-14T07:20:01+00:00",
-  "via": "RSS"
+  "title": "",
+  "updated": "2026-11-14T07:30:00+00:00",
+  "via": "JSON"
  },
  "ms_consumer": {
   "Microsoft 365 (Consumer)": "Service restored",
