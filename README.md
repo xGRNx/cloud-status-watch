@@ -1,6 +1,6 @@
 # cloud-status-watch
 
-เครื่องมือส่วนตัวสำหรับเฝ้าสถานะ **สาธารณะ** ของ Microsoft 365, Outlook.com, Azure และ AWS
+เครื่องมือส่วนตัวสำหรับเฝ้าสถานะ **สาธารณะ** ของ Microsoft 365, Outlook.com, Azure, AWS และ Claude
 แล้วแจ้งเตือนเข้า Discord เมื่อมี incident ใหม่ สถานะเปลี่ยน หรือ incident ปิด
 
 - รันบน GitHub Actions ทุก 10 นาที ไม่ต้องมีเซิร์ฟเวอร์
@@ -14,9 +14,10 @@
 |---|---|---|---|
 | `ms_json` | Microsoft 365 (JSON) | `https://status.cloud.microsoft/api/posts/mac` | แหล่งหลัก ให้ชื่อ incident |
 | `ms_rss` | Microsoft 365 (RSS) | `https://status.cloud.microsoft/api/feed/mac` | ใช้คู่กับ JSON และเทียบกัน |
-| `ms_consumer` | Outlook.com, OneDrive ฯลฯ | `https://status.cloud.microsoft/api/posts/m365Consumer` | รูปแบบข้อมูลยังไม่ได้ยืนยัน |
+| `ms_consumer` | Outlook.com, OneDrive ฯลฯ | `https://status.cloud.microsoft/api/posts/m365Consumer` | หนึ่งแถวต่อหนึ่งบริการ แถว "Microsoft 365 (Consumer)" รวมเหตุของหลายบริการ |
 | `azure` | Azure Status | `https://rssfeed.azure.status.microsoft/en-us/status/feed/` | feed ว่าง = ไม่มีเหตุ |
 | `aws` | AWS Health | `https://status.aws.amazon.com/rss/all.rss` | ทุก region ทุกบริการ |
+| `claude` | Claude Status | `https://status.claude.com/history.rss` | ติดตามราย incident แจ้งทุก incident รอบแรกบันทึกโดยไม่แจ้งย้อนหลัง |
 | `upenn` | UPenn incident extract | ดูใน `watch.py` | ใช้เติม incident ID (EX…/MO…) เท่านั้น ดึงเฉพาะตอนมีเหตุ |
 
 `ms_json` กับ `ms_rss` ถูกรวมเป็นเหตุการณ์เดียวชื่อ `ms365` เพื่อไม่ให้แจ้งซ้ำ
@@ -61,6 +62,9 @@ Webhook URL คือกุญแจโพสต์เข้า channel ห้�
 | `mismatch_status` | JSON กับ RSS ของ Microsoft 365 บอกสถานะไม่ตรงกัน | ทันที |
 | `mismatch_time` | JSON กับ RSS ลงเวลา update ต่างกันเกิน 90 นาที | ทันที |
 | `stale` | ยังขึ้นว่ามีเหตุ แต่ไม่มี update เกิน 6 ชั่วโมง | ทันที |
+| `overdue` | เลยเวลา update ถัดไปที่ต้นทางประกาศไว้เกิน 60 นาที | ทันที |
+
+`stale` และ `overdue` ตรวจทั้งฝั่ง Microsoft 365 และฝั่ง consumer แยกกัน ถึงเกณฑ์ใดก่อนก็แจ้งครั้งเดียว ไม่ใช้กับ Azure, AWS และ Claude
 
 Remark เดิมจะไม่ถูกแจ้งซ้ำทุกรอบ ระหว่างที่ remark ยังเปิดอยู่ ข้อความ incident จะมีบรรทัดท้ายบอกไว้ด้วย
 ค่าเกณฑ์ทั้งหมดแก้ได้ที่ส่วนบนของ `watch.py`
@@ -72,8 +76,8 @@ Remark เดิมจะไม่ถูกแจ้งซ้ำทุกรอ�
 - workflow จะ commit สองโฟลเดอร์นี้เมื่อมีการเปลี่ยนแปลง ประวัติ commit จึงเป็นหลักฐานเวลาอีกชั้นหนึ่ง
 - ถ้าส่ง Discord ไม่สำเร็จ ระบบจะไม่บันทึก state รอบนั้น เพื่อให้รอบถัดไปส่งใหม่
 
-ประเภทเหตุการณ์ใน log: `startup`, `new`, `update`, `resolved`, `aws`, `remark`, `remark_cleared`
-รายการ AWS ที่ไม่ได้แจ้งจะมี `notified: false` พร้อม `skip_reason` (`filtered`, `old`, `cap`)
+ประเภทเหตุการณ์ใน log: `startup`, `source_added`, `new`, `update`, `resolved`, `info`, `aws`, `id_lookup`, `remark`, `remark_cleared`
+รายการ AWS ที่ไม่ได้แจ้งจะมี `notified: false` พร้อม `skip_reason` (`filtered`, `old`, `cap`) ส่วน incident ของ Claude ที่ update ล่าสุดเก่ากว่า 24 ชั่วโมงจะมี `skip_reason` เป็น `old`
 
 ## ทดสอบบนเครื่อง
 
@@ -100,6 +104,6 @@ python3 watch.py --dry-run
 
 ซอร์สโค้ดใน repo นี้เผยแพร่ภายใต้ [MIT License](LICENSE)
 
-MIT license ครอบคลุมเฉพาะซอร์สโค้ด ข้อความสถานะและประกาศที่บันทึกอยู่ใน `logs/` และ `state/` เป็นของผู้ให้บริการแต่ละราย (Microsoft, Amazon Web Services) และไม่อยู่ภายใต้ license นี้
+MIT license ครอบคลุมเฉพาะซอร์สโค้ด ข้อความสถานะและประกาศที่บันทึกอยู่ใน `logs/` และ `state/` เป็นของผู้ให้บริการแต่ละราย (Microsoft, Amazon Web Services, Anthropic) และไม่อยู่ภายใต้ license นี้
 
-โครงการนี้ไม่มีส่วนเกี่ยวข้องกับ และไม่ได้รับการรับรองจาก Microsoft หรือ Amazon Web Services
+โครงการนี้ไม่มีส่วนเกี่ยวข้องกับ และไม่ได้รับการรับรองจาก Microsoft, Amazon Web Services หรือ Anthropic
