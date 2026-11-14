@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """cloud-status-watch
 
-เฝ้าสถานะ "สาธารณะ" ของ Microsoft 365 / Outlook.com / Azure / AWS
+เฝ้าสถานะ "สาธารณะ" ของ Microsoft 365 / Outlook.com / Azure / AWS / Claude
 แล้วแจ้งเตือนเข้า Discord เมื่อมี incident ใหม่ สถานะเปลี่ยน หรือ incident ปิด
 พร้อม remark เมื่อแหล่งข้อมูลเองมีปัญหา (โดน block, รูปแบบเปลี่ยน, ข้อมูลไม่ตรงกัน, ข้อมูลค้าง)
 
@@ -23,7 +23,7 @@ from pathlib import Path
 
 # ---------------------------------------------------------------- ค่าตั้งต้น
 ICT = timezone(timedelta(hours=7))
-UA = "cloud-status-watch/0.3.0 (personal status monitor)"
+UA = "cloud-status-watch/0.3.1 (personal status monitor)"
 TIMEOUT = 25
 MAX_BYTES = 3_000_000
 
@@ -33,6 +33,7 @@ SOURCES = {
     "ms_consumer": ("Microsoft 365 consumer / Outlook.com", "https://status.cloud.microsoft/api/posts/m365Consumer"),
     "azure": ("Azure Status", "https://rssfeed.azure.status.microsoft/en-us/status/feed/"),
     "aws": ("AWS Health", "https://status.aws.amazon.com/rss/all.rss"),
+    "claude": ("Claude Status", "https://status.claude.com/history.rss"),
     # ใช้เติม incident ID (EX…/MO…) เท่านั้น และดึงเฉพาะตอนมี incident ของ Microsoft 365
     "upenn": ("UPenn incident extract (เสริม)", "https://mailservices.isc.upenn.edu/computing/email/penno365/alerts/ms-incidents.html"),
 }
@@ -41,6 +42,7 @@ PUBLIC_PAGE = {
     "ms_consumer": "https://status.cloud.microsoft/m365",
     "azure": "https://azure.status.microsoft/en-us/status/",
     "aws": "https://health.aws.amazon.com/health/status",
+    "claude": "https://status.claude.com/",
 }
 
 OK_STATUSES = {
@@ -54,6 +56,9 @@ SUMMARY_LIMIT = 1200       # ความยาวเนื้อความป
 DISCORD_MAX_CHARS = 5500   # Discord จำกัดตัวอักษรรวมของ embeds ต่อข้อความไว้ที่ 6000
 AWS_MAX_AGE_HOURS = 24     # รายการ AWS ที่เก่ากว่านี้ไม่แจ้งเตือน (บันทึก log อย่างเดียว)
 AWS_MAX_ALERTS = 10        # กันข้อความท่วมในรอบเดียว
+CLAUDE_MAX_AGE_HOURS = 24  # incident ของ Claude ที่ update ล่าสุดเก่ากว่านี้ไม่แจ้งเตือน (บันทึก log อย่างเดียว)
+# ป้ายสถานะที่ถือว่าปิดเหตุ — ยืนยันจากข้อมูลจริงแล้วเฉพาะ Resolved ที่เหลือเป็นค่ามาตรฐานของ Statuspage
+CLAUDE_CLOSED = {"resolved", "postmortem", "completed"}
 ID_MAX_TRIES = 6           # จำนวนรอบที่ลองค้น incident ID ซ้ำต่อหนึ่งหัวข้อ (นอกเหนือจากตอนมี update)
 FAIL_THRESHOLD = 2         # network/http error ต้องเกิดติดกันกี่รอบจึง remark
 
@@ -302,6 +307,24 @@ def read_consumer(text):
                                     **post_fields(low.get("title") or "", low.get("message") or "")}
     if not out:
         raise Problem("shape", "ไม่พบรายการบริการที่มี Status")
+    return out
+
+
+def read_claude(text):
+    """Statuspage RSS: 1 item = 1 incident, pubDate = เวลา update ล่าสุด
+    description เรียง update ใหม่สุดก่อน แต่ละก้อนคือ <p><small>เวลา</small><br><strong>สถานะ</strong> - ข้อความ</p>"""
+    out, labelled = [], 0
+    for i in rss_items(text):
+        blocks = re.findall(r"<p>(.*?)</p>", i["desc"], re.S)
+        m = re.search(r"<strong>(.*?)</strong>\s*-?\s*(.*)", blocks[0], re.S) if blocks else None
+        label = clean(m.group(1), 40) if m else ""
+        labelled += bool(label)
+        body = clean(m.group(2) if m else i["desc"], 20000)
+        out.append({"guid": i["guid"], "link": i["link"], "title": clean(i["title"], 250), "pub": i["pub"],
+                    "label": label, "text": clip_sentence(body, SUMMARY_LIMIT),
+                    "updates": len(blocks), "done": label.lower() in CLAUDE_CLOSED})
+    if out and not labelled:
+        raise Problem("shape", "ไม่พบป้ายสถานะ <strong> ใน description")
     return out
 
 
@@ -595,6 +618,45 @@ def main():
                                 url=PUBLIC_PAGE["aws"]))
         readings["AWS"] = f"feed มี {len(aws)} รายการ, ใหม่รอบนี้ {len(fresh) if seeded else 0}"
         state["aws"] = {"seen": sorted(i["guid"] for i in aws)}
+
+    # ---- Claude (feed เป็นประวัติ incident — ติดตามราย incident ด้วย guid, รอบแรกบันทึกโดยไม่แจ้ง)
+    cl = load("claude", read_claude)
+    if cl is not None:
+        seeded = "claude" in state
+        prev_cl = state.get("claude", {})
+        cur_cl = {i["guid"]: {"label": i["label"], "pub": iso(i["pub"]), "title": i["title"]} for i in cl}
+        open_n = sum(not i["done"] for i in cl)
+        readings["Claude"] = (f"มี incident เปิดอยู่ {open_n} รายการ" if open_n
+                              else f"ปกติ (ไม่มี incident เปิดอยู่, feed มี {len(cl)} รายการ)")
+        order = sorted(cl, key=lambda i: i["pub"] or datetime.min.replace(tzinfo=timezone.utc))
+        for i in order if seeded else []:
+            was, me = prev_cl.get(i["guid"]), cur_cl[i["guid"]]
+            if was and (was.get("label"), was.get("pub")) == (me["label"], me["pub"]):
+                continue
+            was_done = bool(was) and str(was.get("label", "")).lower() in CLAUDE_CLOSED
+            if i["done"] and was_done:
+                kind, head = "info", "🔵 Claude: มี update หลังปิดเหตุ"
+            elif i["done"]:
+                kind, head = "resolved", ("🟢 Claude: incident ปิดแล้ว" if was else "🟢 Claude: พบ incident ที่ปิดไปแล้ว")
+            elif was:
+                kind, head = "update", "🟠 Claude: มี update"
+            else:
+                kind, head = "new", "🔴 Claude: พบ incident ใหม่"
+            too_old = bool(i["pub"]) and (now - i["pub"]) > timedelta(hours=CLAUDE_MAX_AGE_HOURS)
+            if not too_old:
+                embeds.append(embed(kind, head, f"**{i['title']}**\n{i['text']}",
+                                    [("สถานะ", i["label"] or "ไม่ระบุ", True),
+                                     ("จำนวน update ในประกาศ", i["updates"], True),
+                                     ("Update ล่าสุดของต้นทาง", fmt_ict(i["pub"]), False)],
+                                    i["link"] or PUBLIC_PAGE["claude"]))
+            log(kind, "claude", key=i["guid"], status=i["label"], previous=(was or {}).get("label"),
+                title=i["title"], updated=me["pub"], notified=not too_old, skip_reason="old" if too_old else None)
+        if not seeded and not first_run:
+            embeds.append(embed("info", "🔵 เริ่มเฝ้า Claude Status",
+                                f"บันทึกรายการที่มีอยู่ {len(cl)} รายการโดยไม่แจ้งย้อนหลัง\nสถานะตอนนี้: {readings['Claude']}",
+                                url=PUBLIC_PAGE["claude"]))
+            log("source_added", "claude", reading=readings["Claude"])
+        state["claude"] = cur_cl
 
     # ---- Remark เรื่องสุขภาพของแหล่งข้อมูล
     label = {**{k: v[0] for k, v in SOURCES.items()},
