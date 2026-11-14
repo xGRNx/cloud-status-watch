@@ -23,7 +23,7 @@ from pathlib import Path
 
 # ---------------------------------------------------------------- ค่าตั้งต้น
 ICT = timezone(timedelta(hours=7))
-UA = "cloud-status-watch/0.3.1 (personal status monitor)"
+UA = "cloud-status-watch/0.3.2 (personal status monitor)"
 TIMEOUT = 25
 MAX_BYTES = 3_000_000
 
@@ -34,8 +34,9 @@ SOURCES = {
     "azure": ("Azure Status", "https://rssfeed.azure.status.microsoft/en-us/status/feed/"),
     "aws": ("AWS Health", "https://status.aws.amazon.com/rss/all.rss"),
     "claude": ("Claude Status", "https://status.claude.com/history.rss"),
-    # ใช้เติม incident ID (EX…/MO…) เท่านั้น และดึงเฉพาะตอนมี incident ของ Microsoft 365
-    "upenn": ("UPenn incident extract (เสริม)", "https://mailservices.isc.upenn.edu/computing/email/penno365/alerts/ms-incidents.html"),
+    # สำเนาประกาศจาก admin center ของ tenant อื่น (บุคคลที่สาม): ใช้เฝ้าเหตุที่ไม่ขึ้นหน้าสาธารณะ
+    # เติม incident ID (EX…/MO…) และเติมข้อมูลตอนปิดเหตุ — ดึงทุก UPENN_EVERY_MINUTES นาที
+    "upenn": ("Microsoft 365 admin center ผ่าน UPenn", "https://mailservices.isc.upenn.edu/computing/email/penno365/alerts/ms-incidents.html"),
 }
 PUBLIC_PAGE = {
     "ms365": "https://status.cloud.microsoft/",
@@ -56,6 +57,14 @@ SUMMARY_LIMIT = 1200       # ความยาวเนื้อความป
 DISCORD_MAX_CHARS = 5500   # Discord จำกัดตัวอักษรรวมของ embeds ต่อข้อความไว้ที่ 6000
 AWS_MAX_AGE_HOURS = 24     # รายการ AWS ที่เก่ากว่านี้ไม่แจ้งเตือน (บันทึก log อย่างเดียว)
 AWS_MAX_ALERTS = 10        # กันข้อความท่วมในรอบเดียว
+RUN_INTERVAL_MINUTES = 10  # ระยะห่างของรอบรัน (ใช้คำนวณว่ารอบใดถึงคิวดึงหน้า UPenn)
+UPENN_EVERY_MINUTES = 30   # ดึงหน้า UPenn ทุกกี่นาที (ต้นทาง refresh ทุก 15 นาที และหน้ามีขนาดใหญ่)
+UPENN_MAX_AGE_HOURS = 24   # รายการที่ update ล่าสุดเก่ากว่านี้ไม่แจ้งเตือน (บันทึก log อย่างเดียว)
+UPENN_MAX_ALERTS = 10      # กันข้อความท่วมในรอบเดียว
+# แจ้งเฉพาะ Classification = incident ของบริการเหล่านี้ (ตัวพิมพ์เล็ก) ที่เหลือบันทึก log อย่างเดียว
+UPENN_SERVICES = {"exchange online", "microsoft teams", "sharepoint online", "microsoft onedrive",
+                  "microsoft 365 suite"}
+UPENN_NOTE = "ที่มา: admin center ของ tenant อื่น ผ่านหน้า UPenn (บุคคลที่สาม) — อาจไม่ตรงกับ tenant ของคุณ"
 CLAUDE_MAX_AGE_HOURS = 24  # incident ของ Claude ที่ update ล่าสุดเก่ากว่านี้ไม่แจ้งเตือน (บันทึก log อย่างเดียว)
 # ป้ายสถานะที่ถือว่าปิดเหตุ — ยืนยันจากข้อมูลจริงแล้วเฉพาะ Resolved ที่เหลือเป็นค่ามาตรฐานของ Statuspage
 CLAUDE_CLOSED = {"resolved", "postmortem", "completed"}
@@ -337,6 +346,60 @@ def aws_parts(guid):
 
 
 ID_RE = re.compile(r"\b([A-Z]{2}\d{5,8})\b")
+UPENN_TS = r"\w{3} (\w{3}) +(\d{1,2}) (\d\d:\d\d:\d\d) (\d{4}) UTC"
+UPENN_HEAD = re.compile(r"\b([A-Z]{2}\d{5,8}) - (.{3,400}?)\s+Status:\s*([A-Za-z]+)\s+Start Time:")
+
+
+def upenn_dt(text):
+    """'Sat Nov 14 04:17:52 2026 UTC (...)' -> datetime (อ่านไม่ได้คืน None)"""
+    m = re.search(UPENN_TS, text or "")
+    if m:
+        try:
+            return datetime.strptime(" ".join(m.groups()), "%b %d %H:%M:%S %Y").replace(tzinfo=timezone.utc)
+        except ValueError:
+            pass
+    return None
+
+
+def read_upenn(page):
+    """แยกหน้า UPenn เป็น dict ราย incident ID — ทำงานบนข้อความที่ลอก tag แล้ว จึงไม่ผูกกับโครง HTML
+    แต่ละรายการขึ้นต้นด้วย "ID - หัวข้อ" ตามด้วย Status, Start Time, End Time, Service, Feature Group,
+    Classification, Last Updated, Root Cause, Next Update และ (ถ้ามี) Details เรียง update ใหม่สุดก่อน"""
+    flat = clean(page, limit=len(page) + 1)
+    heads = list(UPENN_HEAD.finditer(flat))
+    if not heads:
+        raise Problem("shape", "ไม่พบรายการ incident ในหน้า UPenn")
+    out = {}
+    for n, h in enumerate(heads):
+        seg = flat[h.start(): heads[n + 1].start() if n + 1 < len(heads) else len(flat)]
+
+        def field(label, stop):
+            m = re.search(label + r":\s*(.*?)\s+" + stop + ":", seg)
+            return m.group(1).strip() if m else ""
+        nxt = re.search(r"Next Update:\s*(" + UPENN_TS + ")", seg)
+        desc = re.search(r"Description:\s*(.+?)(?=\s+Time:\s+" + UPENN_TS + r"|$)", seg)
+        out.setdefault(h.group(1), {
+            "id": h.group(1), "title": h.group(2).strip()[:250], "status": h.group(3),
+            "svc": field("Service", "Feature Group"), "cls": field("Classification", "Last Updated"),
+            "start": upenn_dt(field("Start Time", "End Time")), "end": upenn_dt(field("End Time", "Service")),
+            "upd": upenn_dt(field("Last Updated", "Root Cause")), "next": upenn_dt(nxt.group(1)) if nxt else None,
+            "desc": desc.group(1) if desc else ""})
+    return out
+
+
+def upenn_view(e):
+    """คืน (เนื้อความ, fields เฉพาะส่วนของ admin center) สำหรับรายการจากหน้า UPenn
+    เวลาเริ่ม/สิ้นสุดใช้ค่าจากเนื้อความประกาศก่อน เพราะบรรทัดหัวของ UPenn เคยคลาดเคลื่อน"""
+    f = post_fields("", e["desc"])
+    if is_ok(e["status"]):
+        body = f["final"] or f["summary"]
+        rows = [f"{n} {fmt_ict(dt)}" for n, dt in (("เริ่ม", parse_when(f["start"]) or e["start"]),
+                                                   ("สิ้นสุด", parse_when(f["end"]) or e["end"])) if dt]
+        extra = [("ช่วงเวลาของเหตุ (ตามประกาศ)", "\n".join(rows), False)] if rows else []
+    else:
+        body = f["summary"]
+        extra = [("Update ถัดไป (ตามประกาศ)", fmt_ict(e["next"]) if e["next"] else fmt_next(f["next"]), False)]
+    return body, extra
 
 
 def find_incident_id(page, title):
@@ -450,6 +513,31 @@ def main():
         logs.append({"ts_utc": iso(now), "ts_ict": now.astimezone(ICT).isoformat(timespec="seconds"),
                      "type": kind, "source": source, **kw})
 
+    upenn_cache = {}
+
+    def upenn_page():
+        """ดึงหน้า UPenn ไม่เกินหนึ่งครั้งต่อรอบ คืนข้อความ หรือ None ถ้าดึงไม่ได้"""
+        nonlocal upenn_tried
+        if "page" not in upenn_cache:
+            upenn_tried = True
+            try:
+                upenn_cache["page"] = fetch("upenn", args.fixtures)
+            except Problem as p:
+                problems["upenn"] = p
+                upenn_cache["page"] = None
+        return upenn_cache["page"]
+
+    def upenn_entries():
+        """รายการจากหน้า UPenn แยกตาม ID หรือ None ถ้าดึง/อ่านไม่ได้"""
+        if "ents" not in upenn_cache:
+            page = upenn_page()
+            try:
+                upenn_cache["ents"] = read_upenn(page) if page is not None else None
+            except Problem as p:
+                problems["upenn"] = p
+                upenn_cache["ents"] = None
+        return upenn_cache["ents"]
+
     def load(name, reader):
         try:
             return reader(fetch(name, args.fixtures))
@@ -496,14 +584,13 @@ def main():
             cur["id_tries"] = prev.get("id_tries", 0) if same else 0
             # ค้น ID เมื่อมี update และลองซ้ำอีกไม่เกิน ID_MAX_TRIES รอบถ้ายังไม่ได้
             if not cur["incident_id"] and cur["title"] and (kind or cur["id_tries"] < ID_MAX_TRIES):
-                upenn_tried = True
                 cur["id_tries"] = min(cur["id_tries"] + 1, ID_MAX_TRIES)
-                try:
-                    cur["incident_id"] = find_incident_id(fetch("upenn", args.fixtures), cur["title"])
+                page = upenn_page()
+                if page is not None:
+                    cur["incident_id"] = find_incident_id(page, cur["title"])
                     result = "found" if cur["incident_id"] else "no_match"
-                except Problem as p:
-                    problems["upenn"] = p
-                    result = f"fetch_failed:{p.code}"
+                else:
+                    result = f"fetch_failed:{problems['upenn'].code}"
                 log("id_lookup", "ms365", result=result, incident_id=cur["incident_id"],
                     title=cur["title"], attempt=cur["id_tries"])
                 found_late = bool(cur["incident_id"]) and not kind
@@ -515,16 +602,31 @@ def main():
                     "resolved": "🟢 Microsoft 365: กลับสู่สถานะปกติ"}[kind]
             shown = cur if active else prev
             fields = [("สถานะ", cur["status"], True),
-                      ("Incident ID", shown.get("incident_id") or "ไม่มีในแหล่งข้อมูลสาธารณะ", True),
-                      ("Update ล่าสุดของต้นทาง", fmt_ict(parse_dt(cur["updated"])), False)]
+                      ("Incident ID", shown.get("incident_id") or "ไม่มีในแหล่งข้อมูลสาธารณะ", True)]
+            footer = None
             if active:
-                fields.append(("Update ถัดไป (ตามประกาศ)", fmt_next(rec.get("next")), False))
+                body = rec["summary"]
+                fields += [("Update ล่าสุดของต้นทาง", fmt_ict(parse_dt(cur["updated"])), False),
+                           ("Update ถัดไป (ตามประกาศ)", fmt_next(rec.get("next")), False)]
             else:
+                # หน้าสาธารณะกลับเป็นสถานะเปล่าเมื่อปิดเหตุ เวลา update ของต้นทางจึงเป็นแค่เวลาที่เรียก
+                body = rec["final"]
+                fields.append(("ตรวจพบเมื่อ", fmt_ict(now), False))
                 fields += period_field(rec)
+                closing = (upenn_entries() or {}).get(shown.get("incident_id")) if shown.get("incident_id") else None
+                if closing:
+                    text, extra = upenn_view(closing)
+                    body = body or text
+                    fields += [("สถานะใน admin center", closing["status"], True),
+                               ("Update ล่าสุดใน admin center", fmt_ict(closing["upd"]), True)]
+                    fields += [] if period_field(rec) else extra
+                    footer = UPENN_NOTE
+                if shown.get("incident_id"):
+                    log("close_lookup", "ms365", incident_id=shown.get("incident_id"),
+                        result="found" if closing else "not_found")
             fields.append(("ช่องทางที่ update ล่าสุด", src, True))
-            body = rec["summary"] if active else rec["final"]
             embeds.append(embed(kind, head, f"**{shown.get('title') or '(ต้นทางไม่ระบุหัวข้อ)'}**\n{body}",
-                                fields, PUBLIC_PAGE["ms365"]))
+                                fields, PUBLIC_PAGE["ms365"], footer))
             log(kind, "ms365", status=cur["status"], title=shown.get("title"), updated=cur["updated"],
                 incident_id=shown.get("incident_id"), via=src, notified=True)
         state["ms365"] = cur
@@ -619,6 +721,59 @@ def main():
         readings["AWS"] = f"feed มี {len(aws)} รายการ, ใหม่รอบนี้ {len(fresh) if seeded else 0}"
         state["aws"] = {"seen": sorted(i["guid"] for i in aws)}
 
+    # ---- Microsoft 365 ผ่าน admin center ของ tenant อื่น (หน้า UPenn)
+    # ดึงเมื่อถึงคิว (ทุก UPENN_EVERY_MINUTES) / ยังไม่เคยบันทึก / รอบก่อนดึงไม่สำเร็จ / รอบนี้ดึงมาแล้วด้วยเหตุอื่น
+    seeded = "upenn_feed" in state
+    due = (now.hour * 60 + now.minute) % UPENN_EVERY_MINUTES < RUN_INTERVAL_MINUTES
+    ents = upenn_entries() if (due or not seeded or "upenn" in health or upenn_tried) else None
+    if ents is not None:
+        prev_u, cur_u, sent, open_n = state.get("upenn_feed", {}), {}, 0, 0
+        for e in sorted(ents.values(), key=lambda e: e["upd"] or datetime.min.replace(tzinfo=timezone.utc)):
+            me = {"s": e["status"], "u": iso(e["upd"])}
+            cur_u[e["id"]] = me
+            watched = e["cls"].lower() == "incident" and e["svc"].lower() in UPENN_SERVICES
+            done = is_ok(e["status"])
+            open_n += watched and not done
+            was = prev_u.get(e["id"])
+            if not seeded or was == me:
+                continue
+            was_done = bool(was) and is_ok(was.get("s"))
+            if done and was_done:
+                if was.get("s") == me["s"]:
+                    continue    # ปิดแล้วและสถานะเดิม แค่เวลาเปลี่ยน ไม่ถือเป็นเหตุการณ์
+                kind, head = "info", "🔵 Microsoft 365 (admin center): สถานะหลังปิดเหตุเปลี่ยน"
+            elif done:
+                kind, head = "resolved", ("🟢 Microsoft 365 (admin center): ปิดเหตุแล้ว" if was
+                                          else "🟢 Microsoft 365 (admin center): พบ incident ที่ปิดไปแล้ว")
+            elif was:
+                kind, head = "update", "🟠 Microsoft 365 (admin center): มี update"
+            else:
+                kind, head = "new", "🔴 Microsoft 365 (admin center): พบ incident ใหม่"
+            too_old = bool(e["upd"]) and (now - e["upd"]) > timedelta(hours=UPENN_MAX_AGE_HOURS)
+            reason = ("filtered" if not watched else "old" if too_old
+                      else "cap" if sent >= UPENN_MAX_ALERTS else None)
+            if reason is None:
+                body, extra = upenn_view(e)
+                embeds.append(embed(kind, head, f"**{e['id']} - {e['title']}**\n{body}",
+                                    [("สถานะ", e["status"], True), ("บริการ", e["svc"], True),
+                                     ("Update ล่าสุดของต้นทาง", fmt_ict(e["upd"]), False)] + extra,
+                                    SOURCES["upenn"][1], UPENN_NOTE))
+                sent += 1
+            log(kind, "upenn", key=e["id"], status=e["status"], previous=(was or {}).get("s"), service=e["svc"],
+                classification=e["cls"], title=e["title"], updated=me["u"],
+                notified=reason is None, skip_reason=reason)
+        readings["Microsoft 365 (admin center ผ่าน UPenn)"] = (
+            f"มี incident ที่เข้าตัวกรองเปิดอยู่ {open_n} รายการ (ทั้งหน้า {len(ents)} รายการ)" if open_n
+            else f"ไม่มี incident ที่เข้าตัวกรองเปิดอยู่ (ทั้งหน้า {len(ents)} รายการ)")
+        if not seeded and not first_run:
+            embeds.append(embed("info", "🔵 เริ่มเฝ้า Microsoft 365 admin center ผ่าน UPenn",
+                                f"บันทึกรายการที่มีอยู่ {len(ents)} รายการโดยไม่แจ้งย้อนหลัง\n"
+                                f"สถานะตอนนี้: {readings['Microsoft 365 (admin center ผ่าน UPenn)']}\n"
+                                f"แจ้งเฉพาะ incident ของ: {', '.join(sorted(UPENN_SERVICES))}",
+                                url=SOURCES["upenn"][1], footer=UPENN_NOTE))
+            log("source_added", "upenn", reading=readings["Microsoft 365 (admin center ผ่าน UPenn)"])
+        state["upenn_feed"] = cur_u
+
     # ---- Claude (feed เป็นประวัติ incident — ติดตามราย incident ด้วย guid, รอบแรกบันทึกโดยไม่แจ้ง)
     cl = load("claude", read_claude)
     if cl is not None:
@@ -677,8 +832,7 @@ def main():
             continue
         n = min(was.get("n", 0) + 1 if was.get("code") == p.code else 1, FAIL_THRESHOLD)
         alerted = was.get("alerted", False) and was.get("code") == p.code
-        # upenn ถูกเรียกเป็นครั้งคราว จึงแจ้งทันทีโดยไม่รอให้พลาดติดกัน
-        if not alerted and n >= (1 if (p.code in IMMEDIATE or name == "upenn") else FAIL_THRESHOLD):
+        if not alerted and n >= (1 if p.code in IMMEDIATE else FAIL_THRESHOLD):
             embeds.append(embed("remark", f"⚠️ Remark: {label[name]}", PROBLEM_TEXT[p.code],
                                 [("รายละเอียด", p.detail or "-", False)],
                                 footer="การแจ้งเตือนจากแหล่งนี้อาจไม่ครบหรือล่าช้า จนกว่า remark นี้จะปิด"))

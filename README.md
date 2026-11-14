@@ -18,9 +18,21 @@
 | `azure` | Azure Status | `https://rssfeed.azure.status.microsoft/en-us/status/feed/` | feed ว่าง = ไม่มีเหตุ |
 | `aws` | AWS Health | `https://status.aws.amazon.com/rss/all.rss` | ทุก region ทุกบริการ |
 | `claude` | Claude Status | `https://status.claude.com/history.rss` | ติดตามราย incident แจ้งทุก incident รอบแรกบันทึกโดยไม่แจ้งย้อนหลัง |
-| `upenn` | UPenn incident extract | ดูใน `watch.py` | ใช้เติม incident ID (EX…/MO…) เท่านั้น ดึงเฉพาะตอนมีเหตุ |
+| `upenn` | Microsoft 365 admin center ผ่าน UPenn | ดูใน `watch.py` | สำเนาประกาศจาก admin center ของ tenant อื่น (บุคคลที่สาม) ดึงทุก 30 นาที ดูหัวข้อด้านล่าง |
 
 `ms_json` กับ `ms_rss` ถูกรวมเป็นเหตุการณ์เดียวชื่อ `ms365` เพื่อไม่ให้แจ้งซ้ำ
+
+## Microsoft 365 ผ่าน admin center (หน้า UPenn)
+
+หน้าสถานะสาธารณะของ Microsoft 365 ฝั่งองค์กรถูก update เฉพาะช่วงที่ผู้ดูแลเข้า Service health ใน admin center ไม่ได้ เหตุส่วนใหญ่จึงไม่เคยขึ้นหน้านั้น และเมื่อปิดเหตุ หน้านั้นจะกลับเป็นสถานะเปล่าโดยไม่มีประกาศปิดเหตุ
+
+ระบบจึงอ่านหน้า UPenn ซึ่งเผยแพร่สำเนาประกาศจาก admin center ของ tenant ตัวเอง เพื่อใช้ 3 อย่าง
+
+- **เฝ้าเป็นแหล่งประจำ** แจ้งเฉพาะรายการที่ `Classification` เป็น `incident` ของ Exchange Online, Microsoft Teams, SharePoint Online, Microsoft OneDrive และ Microsoft 365 suite รายการอื่นและ advisory บันทึก log อย่างเดียว (`skip_reason: filtered`) แก้รายชื่อได้ที่ `UPENN_SERVICES` ใน `watch.py`
+- **เติม incident ID** ให้เหตุการณ์ `ms365`
+- **เติมข้อมูลตอนปิดเหตุ** ของ `ms365` (Final status, ช่วงเวลาของเหตุ, เวลาปิดใน admin center)
+
+ข้อความจากแหล่งนี้ขึ้นหัวว่า "Microsoft 365 (admin center)" และมีบรรทัดท้ายระบุที่มาเสมอ ไม่รวมกับเหตุการณ์ `ms365` จากหน้าสาธารณะ เหตุเดียวกันจึงอาจถูกแจ้งจากทั้งสองแหล่ง รอบแรกบันทึกรายการที่มีอยู่โดยไม่แจ้งย้อนหลัง และรายการที่ update ล่าสุดเก่ากว่า 24 ชั่วโมงไม่แจ้ง
 
 ## ติดตั้ง
 
@@ -76,7 +88,7 @@ Remark เดิมจะไม่ถูกแจ้งซ้ำทุกรอ�
 - workflow จะ commit สองโฟลเดอร์นี้เมื่อมีการเปลี่ยนแปลง ประวัติ commit จึงเป็นหลักฐานเวลาอีกชั้นหนึ่ง
 - ถ้าส่ง Discord ไม่สำเร็จ ระบบจะไม่บันทึก state รอบนั้น เพื่อให้รอบถัดไปส่งใหม่
 
-ประเภทเหตุการณ์ใน log: `startup`, `source_added`, `new`, `update`, `resolved`, `info`, `aws`, `id_lookup`, `remark`, `remark_cleared`
+ประเภทเหตุการณ์ใน log: `startup`, `source_added`, `new`, `update`, `resolved`, `info`, `aws`, `id_lookup`, `close_lookup`, `remark`, `remark_cleared`
 รายการ AWS ที่ไม่ได้แจ้งจะมี `notified: false` พร้อม `skip_reason` (`filtered`, `old`, `cap`) ส่วน incident ของ Claude ที่ update ล่าสุดเก่ากว่า 24 ชั่วโมงจะมี `skip_reason` เป็น `old`
 
 ## ทดสอบบนเครื่อง
@@ -93,10 +105,10 @@ python3 watch.py --dry-run
 
 ## ข้อจำกัด
 
-- **เห็นเฉพาะเหตุวงกว้าง** หน้าสถานะสาธารณะไม่แสดงเหตุที่กระทบเฉพาะบาง tenant หรือบางภูมิภาค
+- **ไม่ใช่มุมมองของ tenant คุณ** หน้าสถานะสาธารณะแสดงเฉพาะเหตุวงกว้าง ส่วนหน้า UPenn เป็นมุมมองของ tenant อื่นและคัดเฉพาะบริการที่เขาใช้ เหตุที่กระทบเฉพาะ tenant หรือภูมิภาคของคุณอาจไม่ขึ้นทั้งสองแหล่ง แหล่งที่ตรงที่สุดคือ Service health ใน admin center ของ tenant คุณเอง
 - **อาจช้ากว่าความจริง** ทั้งจากฝั่ง vendor และจาก GitHub Actions ซึ่งไม่รับประกันว่ารอบตั้งเวลาจะตรงนาที
 - **endpoint ของ Microsoft ไม่มีเอกสารทางการ** อาจเปลี่ยนหรือปิดได้ ถ้าเกิดขึ้นจะเห็นเป็น remark `shape`, `parse` หรือ `blocked`
-- **Incident ID มาจากเว็บบุคคลที่สาม** ถ้าหน้า UPenn ใช้ไม่ได้ ข้อความแจ้งเตือนยังส่งตามปกติ แต่ไม่มี ID
+- **หน้า UPenn เป็นเว็บบุคคลที่สาม** อาจเปลี่ยนรูปแบบหรือปิดได้ทุกเมื่อ ถ้าใช้ไม่ได้จะเห็น remark และข้อความจากหน้าสาธารณะยังส่งตามปกติ แต่ไม่มี incident ID และไม่มีข้อมูลปิดเหตุ
 - **GitHub อาจปิด workflow ตั้งเวลา** ของ repo ที่ไม่มีความเคลื่อนไหวนาน ระบบนี้ commit `state.json` อย่างน้อยวันละครั้งจึงไม่ควรเข้าเงื่อนไข ถ้าการแจ้งเตือนเงียบผิดปกติให้ตรวจแท็บ Actions
 - เป็นเครื่องมือช่วยรับรู้เหตุการณ์ ไม่ใช่แหล่งอ้างอิงทางการ ให้ยืนยันกับหน้าสถานะของ vendor ทุกครั้ง
 

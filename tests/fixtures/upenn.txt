@@ -1,1 +1,1290 @@
-<html><body><h2>EX0000001: Sample: users may be unable to connect to their mailboxes</h2><p>status: serviceDegradation</p></body></html>
+Microsoft's Incident Report for PennO365
+Following is a data extract from the PennO365 administrative console of incident reports sent by Microsoft within the last 30 days. We pull out incidents that are relevant to the current PennO365 service offerings and we refresh this data every 15 minutes. Note that incidents related to PennO365 administrative functions are not shown in this list. Additionally you can check Microsoft's status page for current service status messages. This extract was generated Sat Nov 14 00:50:01 2026 EST.
+MO1550821 - Users may be unable to connect to multiple Microsoft 365 services
+Status:	serviceRestored
+Start Time:	Thu Nov 12 10:05:00 2026 UTC (Thu Nov 12 05:05:00 2026 EST)
+End Time:	Fri Nov 13 04:10:00 2026 UTC (Thu Nov 12 23:10:00 2026 EST)
+Service:	Microsoft 365 suite
+Feature Group:	Portal
+Classification:	incident
+Last Updated:	Sat Nov 14 04:17:52 2026 UTC (Fri Nov 13 23:17:52 2026 EST)
+Root Cause:	N/A
+Next Update:	N/A
+collapse section Details
+
+Time:	Sat Nov 14 04:17:52 2026 UTC (Fri Nov 13 23:17:52 2026 EST)
+Description:	Title: Users may be unable to connect to multiple Microsoft 365 services
+User impact: Users may have been unable to connect to multiple Microsoft 365 services.
+Final status: This was a technical issue not related to cyber or AI / agents.
+The incident was introduced by an issue during an earlier network capacity upgrade that surfaced following a recent network change. We have addressed the underlying issue and continue to restore service to remaining customers and regions.
+Given the scale of demand, we restored services gradually, validating stability at each stage. While this took longer, it helped ensure a stable restoration. We will provide a full post-incident report once our review is complete.
+More info: Features of the Microsoft 365 services below that interact with Exchange Online and email services were impacted. Elements of those services that do not depend on interaction with Exchange Online remained functional.
+- Exchange Online: Users may be unable to access their mailbox using Outlook on the web, Outlook desktop (MAPI), Exchange ActiveSync (EAS), or REST-based connections, and email delivery may be delayed.
+- Microsoft 365 admin center: Admins may be unable to load some admin center pages.
+- Microsoft 365 apps: Users may be unable to view their recently used files.
+- Microsoft 365 Apps Admin Center: Multiple services including Cloud Update, Cloud Policy, and Inventory are affected.
+- Microsoft 365 Education: Features including Assignments, Reading Progress, and Speaker Progress may be impacted.
+- Microsoft Copilot 365: Users may be unable to load Copilot Chat or receive responses in the web and desktop apps, and Copilot experiences may be unable to access work data such as email, calendar, and files.
+- Microsoft Defender for Office 365: Some Defender for Office 365 experiences that rely on Purview DLP/Information Protection signals may experience delays or failures in policy evaluation and governance action enforcement. Admins/SOCs may experience delays or failures when accessing NHI features that rely on Data Classification Sensitivity Labels, including Tenant Metrics, Policy, and Data Usage, across the Identity, OAuth, and App Governance pages in the Security portal on Microsoft Defender for Cloud Apps.
+- Microsoft Defender XDR: Users may be unable to load Microsoft Defender portal pages or solution tabs.
+- Microsoft Fabric: Users may encounter failures when exporting reports with sensitivity labels to PDF or PowerPoint, when updating artifacts with sensitivity labels, or opening pbix with sensitivity label in Power BI Desktop. As a workaround, users can remove the sensitivity label from the affected item to complete the operation, if their organization's data protection policies allow it.
+- Microsoft Graph: API requests that access Exchange Online data, such as mail, calendar, and contacts, may time out and prevent users from managing Teams, Channels, Membership, Apps management and send activity notifications using Graph API.
+- Microsoft Intune: Scenarios including device enrollment, device check-in, and device compliance policies may have been intermittently impacted.
+- Microsoft Planner: Users are experiencing Plan and Task operation reliability issues.
+- Microsoft Power Apps: Users may be intermittently unable to sign-in to the Power Apps or Field Service mobile apps. Affected users may be able to utilize Power Apps or Field Service on the web as a way to circumvent impact, and users who are already signed in can potentially avoid impact by not signing out, clearing app data, or reinstalling while the issue is ongoing. Microsoft Power Apps and Microsoft Power Automate Flows, apps, data refreshes and connectors that rely on Microsoft Graph data were intermittently failing.
+- Microsoft Purview: Multiple Purview services including Authorization, auto-labeling, Data Loss Prevention (DLP) across Microsoft 365 services, Communication Compliance, Information Protection label and auto-labeling policies, Role-Based Access Control (RBAC) and Data Classification are impacted, and users may be unable to open or load Microsoft Purview portal pages or protected content. Audit searches, protected content creation, eDiscovery tasks such as search and export, Data Classification and On Demand Scan features may also be impacted.
+- Microsoft Teams: Most of the core functionality including joining calls, meetings, group chats, and channel messages are not impacted. Scenarios that depend on Exchange Online, including Calendar related failures with scheduling, invites, viewing, and meeting edits. Creation of Live or Virtual events fail. Failures with Copilot responses for outlook, calendar, or M365 files, read history, or adding to new chats. Navigating to App chats, adding new contacts or syncing contacts in settings fail. Standard channels are working fine but users may experience the inability to create or delete private or shared channels.
+- Microsoft To Do: The app may not load, and users may see operation failures.
+- Power BI: All users may intermittently be unable to export reports with MIP sensitivity labels to PDF in Power BI.
+- SharePoint Online: Some users may experience issues when sharing SharePoint Online files with people outside their organization, where external sharing is permitted by both organization-level and site-level settings. Additionally, features that depend on Exchange Online may be impacted. Accessing files stored directly in SharePoint Online remains functional.
+- Universal Print: Users may encounter errors submitting print jobs or using admin features.
+- Windows 365: Customers who have configured their tenant and Cloud PCs to use Microsoft Purview Customer Key for Windows 365 Cloud PCs may have users who are unable to connect to their Cloud PCs.
+Scope of impact: This issue may have affected users attempting to access the affected Microsoft 365 services.
+Start time: Thursday, November 12, 2026, at 10:05 AM UTC
+End time: Friday, November 13, 2026, at 4:10 PM UTC
+Preliminary root cause: The incident was introduced by an issue during an earlier network capacity upgrade that surfaced following a recent network change.
+Next Steps: - For a more comprehensive list of next steps and actions, please refer to the Post Incident Report document that will be created for this event.
+We'll provide a preliminary Post-Incident Report within two business days and a final Post-Incident Report within five business days.
+Time:	Sat Nov 14 02:17:51 2026 UTC (Fri Nov 13 21:17:51 2026 EST)
+Description:	Title: Users may be unable to connect to multiple Microsoft 365 services
+User impact: Users may be unable to connect to multiple Microsoft 365 services.
+Current status: We’ve confirmed continued recovery across previously affected environments. We’ll maintain monitoring to ensure the mitigation actions taken remain effective and track processing of the email backlog accumulated during the event.
+We’re continuing to address any open impact scenarios across dependent and related Microsoft 365 products, as detailed in the ‘More info’ section below. We believe the majority of these scenarios have been addressed, with work continuing on any remaining scenarios.
+More info: Features of the Microsoft 365 services below that interact with Exchange Online and email services are impacted. Elements of those services that do not depend on interaction with Exchange Online remain functional.
+- Exchange Online: Users may be unable to access their mailbox using Outlook on the web, Outlook desktop (MAPI), Exchange ActiveSync (EAS), or REST-based connections, and email delivery may be delayed.
+- Microsoft 365 admin center: Admins may be unable to load some admin center pages.
+- Microsoft 365 apps: Users may be unable to view their recently used files.
+- Microsoft 365 Apps Admin Center: Multiple services including Cloud Update, Cloud Policy, and Inventory are affected.
+- Microsoft 365 Education: Features including Assignments, Reading Progress, and Speaker Progress may be impacted.
+- Microsoft Copilot 365: Users may be unable to load Copilot Chat or receive responses in the web and desktop apps, and Copilot experiences may be unable to access work data such as email, calendar, and files.
+- Microsoft Defender for Office 365: Some Defender for Office 365 experiences that rely on Purview DLP/Information Protection signals may experience delays or failures in policy evaluation and governance action enforcement. Admins/SOCs may experience delays or failures when accessing NHI features that rely on Data Classification Sensitivity Labels, including Tenant Metrics, Policy, and Data Usage, across the Identity, OAuth, and App Governance pages in the Security portal on Microsoft Defender for Cloud Apps.
+- Microsoft Defender XDR: Users may be unable to load Microsoft Defender portal pages or solution tabs.
+- Microsoft Fabric: Users may encounter failures when exporting reports with sensitivity labels to PDF or PowerPoint, when updating artifacts with sensitivity labels, or opening pbix with sensitivity label in Power BI Desktop. As a workaround, users can remove the sensitivity label from the affected item to complete the operation, if their organization's data protection policies allow it.
+- Microsoft Graph: API requests that access Exchange Online data, such as mail, calendar, and contacts, may time out and prevent users from managing Teams, Channels, Membership, Apps management and send activity notifications using Graph API.
+- Microsoft Intune: Scenarios including device enrollment, device check-in, and device compliance policies may have been intermittently impacted.
+- Microsoft Planner: Users are experiencing Plan and Task operation reliability issues.
+- Microsoft Power Apps: Users may be intermittently unable to sign-in to the Power Apps or Field Service mobile apps. Affected users may be able to utilize Power Apps or Field Service on the web as a way to circumvent impact, and users who are already signed in can potentially avoid impact by not signing out, clearing app data, or reinstalling while the issue is ongoing. Microsoft Power Apps and Microsoft Power Automate Flows, apps, data refreshes and connectors that rely on Microsoft Graph data were intermittently failing.
+- Microsoft Purview: Multiple Purview services including Authorization, auto-labeling, Data Loss Prevention (DLP) across Microsoft 365 services, Communication Compliance, Information Protection label and auto-labeling policies, Role-Based Access Control (RBAC) and Data Classification are impacted, and users may be unable to open or load Microsoft Purview portal pages or protected content. Audit searches, protected content creation, eDiscovery tasks such as search and export, Data Classification and On Demand Scan features may also be impacted.
+- Microsoft Teams: Most of the core functionality including joining calls, meetings, group chats, and channel messages are not impacted. Scenarios that depend on Exchange Online, including Calendar related failures with scheduling, invites, viewing, and meeting edits. Creation of Live or Virtual events fail. Failures with Copilot responses for outlook, calendar, or M365 files, read history, or adding to new chats. Navigating to App chats, adding new contacts or syncing contacts in settings fail. Standard channels are working fine but users may experience the inability to create or delete private or shared channels.
+- Microsoft To Do: The app may not load, and users may see operation failures.
+- Power BI: All users may intermittently be unable to export reports with MIP sensitivity labels to PDF in Power BI.
+- SharePoint Online: Some users may experience issues when sharing SharePoint Online files with people outside their organization, where external sharing is permitted by both organization-level and site-level settings. Additionally, features that depend on Exchange Online may be impacted. Accessing files stored directly in SharePoint Online remains functional.
+- Universal Print: Users may encounter errors submitting print jobs or using admin features.
+- Windows 365: Customers who have configured their tenant and Cloud PCs to use Microsoft Purview Customer Key for Windows 365 Cloud PCs may have users who are unable to connect to their Cloud PCs.
+Scope of impact: This issue may affect users attempting to access the affected Microsoft 365 services.
+Next update by: Saturday, November 14, 2026, at 4:30 AM UTC
+Time:	Fri Nov 13 22:00:22 2026 UTC (Fri Nov 13 17:00:22 2026 EST)
+Description:	Title: Users may be unable to connect to multiple Microsoft 365 services
+User impact: Users may be unable to connect to multiple Microsoft 365 services.
+Current status: We continue to observe sustained service recovery across the previously affected environments. Due to the severity of impact this incident caused, we're monitoring for an extended period to ensure no additional mitigative actions are required. In parallel, we're monitoring the backlog of email messages accrued during this event to ensure all process successfully before considering the issue resolved.
+We're addressing all impact scenarios for dependent and related Microsoft 365 products as listed in the "More info" section below, and believe the majority of those impacted scenarios have been addressed.
+More info: Features of the Microsoft 365 services below that interact with Exchange Online and email services are impacted. Elements of those services that do not depend on interaction with Exchange Online remain functional.
+- Exchange Online: Users may be unable to access their mailbox using Outlook on the web, Outlook desktop (MAPI), Exchange ActiveSync (EAS), or REST-based connections, and email delivery may be delayed.
+- Microsoft 365 admin center: Admins may be unable to load some admin center pages.
+- Microsoft 365 apps: Users may be unable to view their recently used files.
+- Microsoft 365 Apps Admin Center: Multiple services including Cloud Update, Cloud Policy, and Inventory are affected.
+- Microsoft 365 Education: Features including Assignments, Reading Progress, and Speaker Progress may be impacted.
+- Microsoft Copilot 365: Users may be unable to load Copilot Chat or receive responses in the web and desktop apps, and Copilot experiences may be unable to access work data such as email, calendar, and files.
+- Microsoft Defender for Office 365: Some Defender for Office 365 experiences that rely on Purview DLP/Information Protection signals may experience delays or failures in policy evaluation and governance action enforcement. Admins/SOCs may experience delays or failures when accessing NHI features that rely on Data Classification Sensitivity Labels, including Tenant Metrics, Policy, and Data Usage, across the Identity, OAuth, and App Governance pages in the Security portal on Microsoft Defender for Cloud Apps.
+- Microsoft Defender XDR: Users may be unable to load Microsoft Defender portal pages or solution tabs.
+- Microsoft Fabric: Users may encounter failures when exporting reports with sensitivity labels to PDF or PowerPoint, when updating artifacts with sensitivity labels, or opening pbix with sensitivity label in Power BI Desktop. As a workaround, users can remove the sensitivity label from the affected item to complete the operation, if their organization's data protection policies allow it.
+- Microsoft Graph: API requests that access Exchange Online data, such as mail, calendar, and contacts, may time out and prevent users from managing Teams, Channels, Membership, Apps management and send activity notifications using Graph API.
+- Microsoft Intune: Scenarios including device enrollment, device check-in, and device compliance policies may have been intermittently impacted.
+- Microsoft Planner: Users are experiencing Plan and Task operation reliability issues.
+- Microsoft Power Apps: Users may be intermittently unable to sign-in to the Power Apps or Field Service mobile apps. Affected users may be able to utilize Power Apps or Field Service on the web as a way to circumvent impact, and users who are already signed in can potentially avoid impact by not signing out, clearing app data, or reinstalling while the issue is ongoing.
+- Microsoft Purview: Multiple Purview services including Authorization, auto-labeling, Data Loss Prevention (DLP) across Microsoft 365 services, Communication Compliance, Information Protection label and auto-labeling policies, Role-Based Access Control (RBAC) and Data Classification are impacted, and users may be unable to open or load Microsoft Purview portal pages or protected content. Audit searches, protected content creation, eDiscovery tasks such as search and export, Data Classification and On Demand Scan features may also be impacted.
+- Microsoft Teams: Most of the core functionality including joining calls, meetings, group chats, and channel messages are not impacted. Scenarios that depend on Exchange Online, including Calendar related failures with scheduling, invites, viewing, and meeting edits. Creation of Live or Virtual events fail. Failures with Copilot responses for outlook, calendar, or M365 files, read history, or adding to new chats. Navigating to App chats, adding new contacts or syncing contacts in settings fail. Standard channels are working fine but users may experience the inability to create or delete private or shared channels.
+- Microsoft To Do: The app may not load, and users may see operation failures.
+- Power BI: All users may intermittently be unable to export reports with MIP sensitivity labels to PDF in Power BI.
+- SharePoint Online: Some users may experience issues when sharing SharePoint Online files with people outside their organization, where external sharing is permitted by both organization-level and site-level settings. Additionally, features that depend on Exchange Online may be impacted. Accessing files stored directly in SharePoint Online remains functional.
+- Universal Print: Users may encounter errors submitting print jobs or using admin features.
+- Windows 365: Customers who have configured their tenant and Cloud PCs to use Microsoft Purview Customer Key for Windows 365 Cloud PCs may have users who are unable to connect to their Cloud PCs.
+Scope of impact: This issue may affect users attempting to access the affected Microsoft 365 services.
+Next update by: Saturday, November 14, 2026, at 2:30 AM UTC
+
+EX1550543 - Users may be unable to connect to their mailboxes in Exchange Online through multiple connection methods
+Status:	serviceRestored
+Start Time:	Thu Nov 12 10:05:00 2026 UTC (Thu Nov 12 05:05:00 2026 EST)
+End Time:	Fri Nov 13 16:10:00 2026 UTC (Fri Nov 13 11:10:00 2026 EST)
+Service:	Exchange Online
+Feature Group:	E-Mail and calendar access
+Classification:	incident
+Last Updated:	Sat Nov 14 04:15:46 2026 UTC (Fri Nov 13 23:15:46 2026 EST)
+Root Cause:	N/A
+Next Update:	N/A
+expand section Details
+
+OO1550244 - Some users may be unable to open or create documents in Word for the web
+Status:	serviceDegradation
+Start Time:	Thu Nov 12 10:56:10 2026 UTC (Thu Nov 12 05:56:10 2026 EST)
+End Time:	Not ended yet
+Service:	Microsoft 365 for the web
+Feature Group:	Word Online
+Classification:	advisory
+Last Updated:	Fri Nov 13 22:47:13 2026 UTC (Fri Nov 13 17:47:13 2026 EST)
+Root Cause:	A recent configuration change intended to update the Word for the web loading experience introduced a browser compatibility issue that is preventing the editor from loading for some users.
+Next Update:	Tue Nov 17 09:00:00 2026 UTC (Tue Nov 17 04:00:00 2026 EST)
+expand section Details
+
+CP1447275 - Users' Microsoft 365 Copilot Analyst and Researcher agents may open a new chat window instead of the agents
+Status:	serviceDegradation
+Start Time:	Thu Jul 9 17:33:00 2026 UTC (Thu Jul 9 13:33:00 2026 EDT)
+End Time:	Not ended yet
+Service:	Microsoft Copilot (Microsoft 365)
+Feature Group:	Microsoft Copilot (Microsoft 365)
+Classification:	advisory
+Last Updated:	Fri Nov 13 21:39:46 2026 UTC (Fri Nov 13 16:39:46 2026 EST)
+Root Cause:	The "Open" button for the Analyst or Researcher agents in the Microsoft 365 app store or Unified store accessed through Outlook contains incorrect URL redirection and is causing impact.
+Next Update:	Wed Nov 18 22:30:00 2026 UTC (Wed Nov 18 17:30:00 2026 EST)
+expand section Details
+
+TM1551945 - Admins may see Windows and Android devices appear as unmonitored in the Pro Management Portal (PMP) in Microsoft Teams
+Status:	serviceDegradation
+Start Time:	Fri Nov 13 19:05:35 2026 UTC (Fri Nov 13 14:05:35 2026 EST)
+End Time:	Not ended yet
+Service:	Microsoft Teams
+Feature Group:	Teams Components
+Classification:	advisory
+Last Updated:	Fri Nov 13 21:38:18 2026 UTC (Fri Nov 13 16:38:18 2026 EST)
+Root Cause:	A spike in request traffic following yesterday's outage is disrupting device monitoring status in the PMP.
+Next Update:	Sun Nov 15 11:30:00 2026 UTC (Sun Nov 15 06:30:00 2026 EST)
+expand section Details
+
+EX1542065 - Some users may not see free/busy info shared between organizations using cross-tenant access policy in Exchange Online
+Status:	serviceDegradation
+Start Time:	Wed Nov 4 16:00:00 2026 UTC (Wed Nov 4 11:00:00 2026 EST)
+End Time:	Not ended yet
+Service:	Exchange Online
+Feature Group:	E-Mail and calendar access
+Classification:	advisory
+Last Updated:	Fri Nov 13 21:33:43 2026 UTC (Fri Nov 13 16:33:43 2026 EST)
+Root Cause:	A recent change introduced a regression that causes cross-tenant mailbox requests to be rejected when a tenant ID was used instead of the mailbox's SMTP address.
+Next Update:	Tue Nov 17 00:30:00 2026 UTC (Mon Nov 16 19:30:00 2026 EST)
+expand section Details
+
+PP1550869 - Flows, apps, and connectors are intermittently failing
+Status:	serviceRestored
+Start Time:	Thu Nov 12 17:36:00 2026 UTC (Thu Nov 12 12:36:00 2026 EST)
+End Time:	Fri Nov 13 15:50:00 2026 UTC (Fri Nov 13 10:50:00 2026 EST)
+Service:	Power Platform
+Feature Group:	Other
+Classification:	advisory
+Last Updated:	Fri Nov 13 16:32:31 2026 UTC (Fri Nov 13 11:32:31 2026 EST)
+Root Cause:	N/A
+Next Update:	N/A
+expand section Details
+
+CR1551339 - Field Service mobile app users experience intermittent sign-in failures
+Status:	serviceRestored
+Start Time:	Thu Nov 12 17:30:00 2026 UTC (Thu Nov 12 12:30:00 2026 EST)
+End Time:	Fri Nov 13 12:30:00 2026 UTC (Fri Nov 13 07:30:00 2026 EST)
+Service:	Dynamics 365 Apps
+Feature Group:	Components/Features
+Classification:	advisory
+Last Updated:	Fri Nov 13 15:22:49 2026 UTC (Fri Nov 13 10:22:49 2026 EST)
+Root Cause:	N/A
+Next Update:	N/A
+expand section Details
+
+SP1548842 - Users were unable to view reporting metrics for Amplify Campaigns in SharePoint Online
+Status:	serviceRestored
+Start Time:	Sat Oct 31 10:28:13 2026 UTC (Sat Oct 31 06:28:13 2026 EDT)
+End Time:	Fri Nov 13 10:10:00 2026 UTC (Fri Nov 13 05:10:00 2026 EST)
+Service:	SharePoint Online
+Feature Group:	SharePoint Features
+Classification:	advisory
+Last Updated:	Fri Nov 13 12:38:26 2026 UTC (Fri Nov 13 07:38:26 2026 EST)
+Root Cause:	A recent service change was affecting the configuration used to retrieve Viva Amplify campaign analytics data. This resulted in requests for reporting data failing and preventing the reporting page from displaying metrics.
+Next Update:	N/A
+expand section Details
+
+MO1489432 - Users may be unable to view contacts and Speed Dial entries in Microsoft Teams, Outlook desktop and mobile
+Status:	serviceDegradation
+Start Time:	Tue Oct 6 11:45:49 2026 UTC (Tue Oct 6 07:45:49 2026 EDT)
+End Time:	Not ended yet
+Service:	Microsoft 365 suite
+Feature Group:	Portal
+Classification:	advisory
+Last Updated:	Fri Nov 13 11:09:54 2026 UTC (Fri Nov 13 06:09:54 2026 EST)
+Root Cause:	A problem with a contact-processing component had incorrectly separated some PBCs from their associated profiles when specific contact information wasn't explicitly stored, causing affected contacts to appear as blank.
+Next Update:	Fri Nov 20 15:00:00 2026 UTC (Fri Nov 20 10:00:00 2026 EST)
+expand section Details
+
+OO1547737 - Some users may be unable to upload audio files using the Transcribe feature in Word for the web using some browsers
+Status:	serviceRestored
+Start Time:	Tue Nov 10 09:57:00 2026 UTC (Tue Nov 10 04:57:00 2026 EST)
+End Time:	Fri Nov 13 00:58:00 2026 UTC (Thu Nov 12 19:58:00 2026 EST)
+Service:	Microsoft 365 for the web
+Feature Group:	Word Online
+Classification:	advisory
+Last Updated:	Fri Nov 13 07:09:48 2026 UTC (Fri Nov 13 02:09:48 2026 EST)
+Root Cause:	A recent update for Chromium-based browsers relating to minimum window size restrictions caused impact to the Transcribe feature in Word for the web if a users' browser window didn't match the minimum size threshold.
+Next Update:	N/A
+expand section Details
+
+CP1540142 - Users may be unable to access Cowork in the Microsoft Copilot 365 User Interface (UI)
+Status:	postIncidentReviewPublished
+Start Time:	Thu Nov 5 16:30:00 2026 UTC (Thu Nov 5 11:30:00 2026 EST)
+End Time:	Thu Nov 5 21:20:00 2026 UTC (Thu Nov 5 16:20:00 2026 EST)
+Service:	Microsoft Copilot (Microsoft 365)
+Feature Group:	Microsoft Copilot (Microsoft 365)
+Classification:	incident
+Last Updated:	Fri Nov 13 02:34:14 2026 UTC (Thu Nov 12 21:34:14 2026 EST)
+Root Cause:	N/A
+Next Update:	N/A
+expand section Details
+
+CR1550885 - Agents are unable to access Dynamics 365 Contact Center
+Status:	serviceRestored
+Start Time:	Thu Nov 12 17:00:00 2026 UTC (Thu Nov 12 12:00:00 2026 EST)
+End Time:	Fri Nov 13 00:57:00 2026 UTC (Thu Nov 12 19:57:00 2026 EST)
+Service:	Dynamics 365 Apps
+Feature Group:	Sign In
+Classification:	incident
+Last Updated:	Fri Nov 13 01:25:41 2026 UTC (Thu Nov 12 20:25:41 2026 EST)
+Root Cause:	N/A
+Next Update:	N/A
+expand section Details
+
+WP1539043 - Users are seeing intermittent connection failures when accessing Windows 365 Cloud PCs
+Status:	serviceDegradation
+Start Time:	Thu Nov 5 00:42:06 2026 UTC (Wed Nov 4 19:42:06 2026 EST)
+End Time:	Not ended yet
+Service:	Windows 365
+Feature Group:	End User
+Classification:	advisory
+Last Updated:	Thu Nov 12 23:23:33 2026 UTC (Thu Nov 12 18:23:33 2026 EST)
+Root Cause:	An external routing issue is leading to connectivity issues, which are resulting in this impact.
+Next Update:	Tue Nov 17 01:00:00 2026 UTC (Mon Nov 16 20:00:00 2026 EST)
+expand section Details
+
+DV1550921 - Users may experience sandbox plug-in execution failures across multiple Dynamics 365 apps
+Status:	serviceRestored
+Start Time:	Thu Nov 12 17:36:00 2026 UTC (Thu Nov 12 12:36:00 2026 EST)
+End Time:	Thu Nov 12 21:15:00 2026 UTC (Thu Nov 12 16:15:00 2026 EST)
+Service:	Microsoft Dataverse
+Feature Group:	Other
+Classification:	advisory
+Last Updated:	Thu Nov 12 22:00:05 2026 UTC (Thu Nov 12 17:00:05 2026 EST)
+Root Cause:	N/A
+Next Update:	N/A
+expand section Details
+
+IT1549289 - Users may experience delays installing Volume Purchase Program (VPP) apps in Microsoft Intune for iOS and Mac
+Status:	serviceRestored
+Start Time:	Wed Nov 11 08:00:00 2026 UTC (Wed Nov 11 03:00:00 2026 EST)
+End Time:	Wed Nov 11 19:30:00 2026 UTC (Wed Nov 11 14:30:00 2026 EST)
+Service:	Microsoft Intune
+Feature Group:	Microsoft Intune
+Classification:	advisory
+Last Updated:	Thu Nov 12 19:20:00 2026 UTC (Thu Nov 12 14:20:00 2026 EST)
+Root Cause:	A recent third-party change was resulting in this impact.
+Next Update:	N/A
+expand section Details
+
+TM1550488 - Some users may be unable to access or use Microsoft Teams functionality
+Status:	serviceRestored
+Start Time:	Thu Nov 12 14:45:00 2026 UTC (Thu Nov 12 09:45:00 2026 EST)
+End Time:	Thu Nov 12 15:53:00 2026 UTC (Thu Nov 12 10:53:00 2026 EST)
+Service:	Microsoft Teams
+Feature Group:	Teams Components
+Classification:	incident
+Last Updated:	Thu Nov 12 17:08:41 2026 UTC (Thu Nov 12 12:08:41 2026 EST)
+Root Cause:	N/A
+Next Update:	N/A
+expand section Details
+
+OP1549991 - Users may have been unable to utilize the Side Pane in Microsoft Word and received an error message
+Status:	serviceRestored
+Start Time:	Thu Nov 12 04:57:00 2026 UTC (Wed Nov 11 23:57:00 2026 EST)
+End Time:	Thu Nov 12 08:18:00 2026 UTC (Thu Nov 12 03:18:00 2026 EST)
+Service:	Microsoft 365 apps
+Feature Group:	Office Client issues
+Classification:	advisory
+Last Updated:	Thu Nov 12 09:11:11 2026 UTC (Thu Nov 12 04:11:11 2026 EST)
+Root Cause:	A recent change to the underlying service infrastructure affected its ability to process requests successfully.
+Next Update:	N/A
+expand section Details
+
+DV1549907 - Users experience slow performance and intermittent failures when performing Dataverse operations
+Status:	serviceRestored
+Start Time:	Thu Nov 12 02:54:00 2026 UTC (Wed Nov 11 21:54:00 2026 EST)
+End Time:	Thu Nov 12 06:00:00 2026 UTC (Thu Nov 12 01:00:00 2026 EST)
+Service:	Microsoft Dataverse
+Feature Group:	Other
+Classification:	advisory
+Last Updated:	Thu Nov 12 07:19:29 2026 UTC (Thu Nov 12 02:19:29 2026 EST)
+Root Cause:	N/A
+Next Update:	N/A
+expand section Details
+
+CP1527498 - Some users may be unable to load chat history or previously pinned chats, and can't pin chats in Microsoft 365 Copilot
+Status:	postIncidentReviewPublished
+Start Time:	Tue Oct 27 15:58:45 2026 UTC (Tue Oct 27 11:58:45 2026 EDT)
+End Time:	Wed Nov 4 16:08:21 2026 UTC (Wed Nov 4 11:08:21 2026 EST)
+Service:	Microsoft Copilot (Microsoft 365)
+Feature Group:	Microsoft Copilot (Microsoft 365)
+Classification:	advisory
+Last Updated:	Thu Nov 12 07:07:07 2026 UTC (Thu Nov 12 02:07:07 2026 EST)
+Root Cause:	The pinned chats feature in Microsoft 365 Copilot and Copilot Chat contained a code defect that had been present since the feature was first released. This defect wasn’t caught during testing due to its difficulty to reproduce locally. A recent migration exposed this defect, which, under certain conditions, prevented pinned chats from loading and prevented users from pinning new chats.
+Next Update:	N/A
+expand section Details
+
+CW1530649 - Some users may be unable to load chat history or previously pinned chats, and can't pin chats in Microsoft 365 Copilot
+Status:	postIncidentReviewPublished
+Start Time:	Tue Sep 1 03:38:00 2026 UTC (Mon Aug 31 23:38:00 2026 EDT)
+End Time:	Wed Nov 4 16:08:39 2026 UTC (Wed Nov 4 11:08:39 2026 EST)
+Service:	Microsoft 365 Copilot Chat
+Feature Group:	Microsoft 365 Copilot Chat
+Classification:	advisory
+Last Updated:	Thu Nov 12 07:06:34 2026 UTC (Thu Nov 12 02:06:34 2026 EST)
+Root Cause:	The pinned chats feature in Microsoft 365 Copilot and Copilot Chat contained a code defect that had been present since the feature was first released. This defect wasn’t caught during testing due to its difficulty to reproduce locally. A recent migration exposed this defect, which, under certain conditions, prevented pinned chats from loading and prevented users from pinning new chats.
+Next Update:	N/A
+expand section Details
+
+MP1507695 - Admins may encounter delays in accessing audit log data results in Microsoft Purview Audit
+Status:	serviceDegradation
+Start Time:	Wed Oct 14 16:14:28 2026 UTC (Wed Oct 14 12:14:28 2026 EDT)
+End Time:	Not ended yet
+Service:	Microsoft Purview
+Feature Group:	Microsoft Purview
+Classification:	advisory
+Last Updated:	Thu Nov 12 05:09:21 2026 UTC (Thu Nov 12 00:09:21 2026 EST)
+Root Cause:	N/A
+Next Update:	Thu Nov 12 06:30:00 2026 UTC (Thu Nov 12 01:30:00 2026 EST)
+expand section Details
+
+IT1549049 - Some users may see delays receiving policies, apps, and other changes on Windows devices enrolled in Microsoft Intune
+Status:	serviceDegradation
+Start Time:	Wed Nov 11 16:34:41 2026 UTC (Wed Nov 11 11:34:41 2026 EST)
+End Time:	Not ended yet
+Service:	Microsoft Intune
+Feature Group:	Microsoft Intune
+Classification:	incident
+Last Updated:	Thu Nov 12 01:18:04 2026 UTC (Wed Nov 11 20:18:04 2026 EST)
+Root Cause:	A recent Windows security update, MSRC144654, can cause a single check in to fail during installation.
+Next Update:	Wed Nov 25 02:30:00 2026 UTC (Tue Nov 24 21:30:00 2026 EST)
+expand section Details
+
+CW1530567 - Users may be unable to view recent portions of their conversation history with Microsoft 365 Copilot Chat
+Status:	postIncidentReviewPublished
+Start Time:	Wed Oct 14 15:55:00 2026 UTC (Wed Oct 14 11:55:00 2026 EDT)
+End Time:	Wed Nov 4 21:27:00 2026 UTC (Wed Nov 4 16:27:00 2026 EST)
+Service:	Microsoft 365 Copilot Chat
+Feature Group:	Microsoft 365 Copilot Chat
+Classification:	incident
+Last Updated:	Thu Nov 12 00:47:15 2026 UTC (Wed Nov 11 19:47:15 2026 EST)
+Root Cause:	Microsoft 365 Copilot Chat keeps a cached copy of recent conversation activity so that history loads quickly when a user returns to a conversation. Each conversation is stored durably, and the cached copy is held in the part of our service infrastructure that handles the user's requests. During this event, two conditions combined so that some requests loaded an earlier cached copy of a conversation that didn't yet include its most recent exchanges. First, resource limitations in portions of the infrastructure supporting conversation history meant that some updates to the cached copy couldn't be completed in their usual location. Second, requests that load conversation history weren't always routed in the same way as requests that add new messages. As a result, a user returning to a conversation could sometimes be directed to a location holding an older copy of their history.
+Next Update:	N/A
+expand section Details
+
+EX1478331 - Some users’ email messages may not be quarantined and fail to be stored in the quarantine folder
+Status:	postIncidentReviewPublished
+Start Time:	Wed Sep 23 00:56:00 2026 UTC (Tue Sep 22 20:56:00 2026 EDT)
+End Time:	Fri Oct 2 08:24:00 2026 UTC (Fri Oct 2 04:24:00 2026 EDT)
+Service:	Exchange Online
+Feature Group:	E-Mail timely delivery
+Classification:	incident
+Last Updated:	Thu Nov 12 00:05:57 2026 UTC (Wed Nov 11 19:05:57 2026 EST)
+Root Cause:	Exchange Online can place messages that match an organization's protection or data loss prevention (DLP) policies into quarantine, where administrators can review and release them. Some of these messages are stored in a quarantine location that belongs to the organization, and to route a message there, the service first identifies the organization it belongs to. A recent service update included a change to how our service creates and retrieves organization identity information. After this update, the step that routes messages to the organization's quarantine location was, in some cases, unable to obtain the organization's identifier. When this occurred, the service couldn't determine where to store the message, and the message was returned to the sender with the error "550 5.1.10 Failed to deliver to Quarantine store" instead of being quarantined.
+Next Update:	N/A
+expand section Details
+
+CW1548957 - Some users may intermittently receive no response when submitting queries in Microsoft 365 Copilot Chat
+Status:	serviceRestored
+Start Time:	Wed Nov 11 14:39:26 2026 UTC (Wed Nov 11 09:39:26 2026 EST)
+End Time:	Wed Nov 11 18:26:53 2026 UTC (Wed Nov 11 13:26:53 2026 EST)
+Service:	Microsoft 365 Copilot Chat
+Feature Group:	Microsoft 365 Copilot Chat
+Classification:	incident
+Last Updated:	Wed Nov 11 18:29:24 2026 UTC (Wed Nov 11 13:29:24 2026 EST)
+Root Cause:	N/A
+Next Update:	N/A
+expand section Details
+
+EX1490154 - Users may receive duplicate email messages sent to mailboxes using Exchange Online SMTP forwarding
+Status:	serviceRestored
+Start Time:	Wed Sep 30 21:36:00 2026 UTC (Wed Sep 30 17:36:00 2026 EDT)
+End Time:	Wed Nov 11 16:14:58 2026 UTC (Wed Nov 11 11:14:58 2026 EST)
+Service:	Exchange Online
+Feature Group:	E-Mail timely delivery
+Classification:	advisory
+Last Updated:	Wed Nov 11 16:15:21 2026 UTC (Wed Nov 11 11:15:21 2026 EST)
+Root Cause:	A recent service update caused abnormal headers to be generated during the forwarding process, which resulted in the duplicate email messages being created.
+Next Update:	N/A
+expand section Details
+
+MO1547527 - Admins may not be receiving new Microsoft Copilot low latency adoption reports from the Microsoft 365 admin center
+Status:	serviceRestored
+Start Time:	Tue Nov 10 16:00:00 2026 UTC (Tue Nov 10 11:00:00 2026 EST)
+End Time:	Wed Nov 11 05:31:03 2026 UTC (Wed Nov 11 00:31:03 2026 EST)
+Service:	Microsoft 365 suite
+Feature Group:	Administration
+Classification:	advisory
+Last Updated:	Wed Nov 11 05:33:06 2026 UTC (Wed Nov 11 00:33:06 2026 EST)
+Root Cause:	An issue with a backend data interface blocked the pipeline that delivers Microsoft Copilot low latency adoption report data to the Microsoft 365 admin center.
+Next Update:	N/A
+expand section Details
+
+TM1504581 - Users' Microsoft Teams contact cards may not fully display Out of office text
+Status:	serviceRestored
+Start Time:	Wed Oct 7 01:15:00 2026 UTC (Tue Oct 6 21:15:00 2026 EDT)
+End Time:	Tue Nov 10 20:05:16 2026 UTC (Tue Nov 10 15:05:16 2026 EST)
+Service:	Microsoft Teams
+Feature Group:	Teams Components
+Classification:	advisory
+Last Updated:	Tue Nov 10 20:15:54 2026 UTC (Tue Nov 10 15:15:54 2026 EST)
+Root Cause:	A recent service change to the Microsoft Teams contact cards introduced a code regression in which the user interface (UI) of the Out of office text contained an invalid value, resulting in impact.
+Next Update:	N/A
+expand section Details
+
+TM1545775 - Users may be unable to view previously deleted teams after restoration in Microsoft Teams
+Status:	serviceRestored
+Start Time:	Mon Oct 26 12:53:00 2026 UTC (Mon Oct 26 08:53:00 2026 EDT)
+End Time:	Tue Nov 10 19:34:54 2026 UTC (Tue Nov 10 14:34:54 2026 EST)
+Service:	Microsoft Teams
+Feature Group:	Teams Components
+Classification:	advisory
+Last Updated:	Tue Nov 10 19:47:08 2026 UTC (Tue Nov 10 14:47:08 2026 EST)
+Root Cause:	A recent change introduced a regression that resulted in restored teams remaining invisible due to a code check missing the “restored” tag, resulting in impact.
+Next Update:	N/A
+expand section Details
+
+MO1532211 - Users' Microsoft 365 Apps usage reports may show outdated data in the Microsoft 365 admin center
+Status:	serviceRestored
+Start Time:	Fri Oct 30 00:00:00 2026 UTC (Thu Oct 29 20:00:00 2026 EDT)
+End Time:	Tue Nov 10 08:00:00 2026 UTC (Tue Nov 10 03:00:00 2026 EST)
+Service:	Microsoft 365 suite
+Feature Group:	Portal
+Classification:	advisory
+Last Updated:	Tue Nov 10 18:59:41 2026 UTC (Tue Nov 10 13:59:41 2026 EST)
+Root Cause:	An upstream component of the data processing pipeline had entered an unhealthy state, resulting in delays processing Microsoft 365 Apps data.
+Next Update:	N/A
+expand section Details
+
+EX1545193 - Some users may be intermittently unable to send email messages to Outlook.com, Hotmail.com, or Live.com email addresses
+Status:	serviceRestored
+Start Time:	Fri Nov 6 18:00:00 2026 UTC (Fri Nov 6 13:00:00 2026 EST)
+End Time:	Mon Nov 9 11:02:00 2026 UTC (Mon Nov 9 06:02:00 2026 EST)
+Service:	Exchange Online
+Feature Group:	E-Mail timely delivery
+Classification:	incident
+Last Updated:	Tue Nov 10 05:38:11 2026 UTC (Tue Nov 10 00:38:11 2026 EST)
+Root Cause:	A recent update to the spam enforcement rules caused email messages to be incorrectly marked and blocked, which led to impact.
+Next Update:	N/A
+expand section Details
+
+CP1540672 - Users in Japan, Asia and Australia may be unable to access Cowork in the Microsoft Copilot 365 User Interface (UI)
+Status:	serviceRestored
+Start Time:	Thu Nov 5 16:30:00 2026 UTC (Thu Nov 5 11:30:00 2026 EST)
+End Time:	Tue Nov 10 01:14:55 2026 UTC (Mon Nov 9 20:14:55 2026 EST)
+Service:	Microsoft Copilot (Microsoft 365)
+Feature Group:	Microsoft Copilot (Microsoft 365)
+Classification:	incident
+Last Updated:	Tue Nov 10 01:15:09 2026 UTC (Mon Nov 9 20:15:09 2026 EST)
+Root Cause:	A recent deployment introduced an issue where additional calls were delivered to multiple API endpoints, which caused our automated traffic management mechanisms to reduce request traffic flow which resulted in impact.
+Next Update:	N/A
+expand section Details
+
+CP1528078 - Users may see an erroneous error when sharing agents with new owners in Microsoft Copilot Agent Builder
+Status:	serviceDegradation
+Start Time:	Wed Oct 28 01:16:31 2026 UTC (Tue Oct 27 21:16:31 2026 EDT)
+End Time:	Not ended yet
+Service:	Microsoft Copilot (Microsoft 365)
+Feature Group:	Microsoft Copilot (Microsoft 365)
+Classification:	advisory
+Last Updated:	Mon Nov 9 23:14:11 2026 UTC (Mon Nov 9 18:14:11 2026 EST)
+Root Cause:	An underlying code issue in the service is resulting in this incorrect message in the User Interface.
+Next Update:	Tue Nov 17 00:00:00 2026 UTC (Mon Nov 16 19:00:00 2026 EST)
+expand section Details
+
+EX1542182 - Users may be unable to access their Exchange Online mailboxes through any connection method
+Status:	serviceRestored
+Start Time:	Fri Nov 6 23:52:30 2026 UTC (Fri Nov 6 18:52:30 2026 EST)
+End Time:	Sat Nov 7 02:44:39 2026 UTC (Fri Nov 6 21:44:39 2026 EST)
+Service:	Exchange Online
+Feature Group:	E-Mail and calendar access
+Classification:	advisory
+Last Updated:	Sat Nov 7 02:52:27 2026 UTC (Fri Nov 6 21:52:27 2026 EST)
+Root Cause:	A portion of mailbox service infrastructure entered into an unhealthy state and was encountering failures when attempting to process access requests, which resulted in impact.
+Next Update:	N/A
+expand section Details
+
+MO1540560 - Users may not be able to access Class Notebooks in Microsoft OneNote
+Status:	serviceRestored
+Start Time:	Thu Nov 5 23:36:40 2026 UTC (Thu Nov 5 18:36:40 2026 EST)
+End Time:	Fri Nov 6 01:01:35 2026 UTC (Thu Nov 5 20:01:35 2026 EST)
+Service:	Microsoft 365 suite
+Feature Group:	Administration
+Classification:	advisory
+Last Updated:	Fri Nov 6 01:03:48 2026 UTC (Thu Nov 5 20:03:48 2026 EST)
+Root Cause:	An issue contained in a recent service change that was resulting in impact.
+Next Update:	N/A
+expand section Details
+
+TM1489031 - Users may see Microsoft Teams on the web displayed in English
+Status:	serviceRestored
+Start Time:	Mon Sep 28 19:30:00 2026 UTC (Mon Sep 28 15:30:00 2026 EDT)
+End Time:	Wed Nov 4 15:29:00 2026 UTC (Wed Nov 4 10:29:00 2026 EST)
+Service:	Microsoft Teams
+Feature Group:	Teams Components
+Classification:	advisory
+Last Updated:	Wed Nov 4 22:39:10 2026 UTC (Wed Nov 4 17:39:10 2026 EST)
+Root Cause:	A redirection issue was incorrectly applying English language settings when users accessed Microsoft Teams on the web.
+Next Update:	N/A
+expand section Details
+
+MO1501829 - Admins may have seen stale data in the Copilot Health page in the Microsoft 365 admin center
+Status:	serviceRestored
+Start Time:	Tue Sep 8 16:05:00 2026 UTC (Tue Sep 8 12:05:00 2026 EDT)
+End Time:	Wed Nov 4 11:48:37 2026 UTC (Wed Nov 4 06:48:37 2026 EST)
+Service:	Microsoft 365 suite
+Feature Group:	Portal
+Classification:	advisory
+Last Updated:	Wed Nov 4 12:17:18 2026 UTC (Wed Nov 4 07:17:18 2026 EST)
+Root Cause:	An upstream process responsible for Copilot Health data was disabled, resulting in the impact.
+Next Update:	N/A
+expand section Details
+
+EX1537187 - On-premises users may see inconsistent results when viewing the hybrid free/busy information for Exchange Online users
+Status:	serviceRestored
+Start Time:	Mon Oct 26 19:41:00 2026 UTC (Mon Oct 26 15:41:00 2026 EDT)
+End Time:	Wed Nov 4 04:02:05 2026 UTC (Tue Nov 3 23:02:05 2026 EST)
+Service:	Exchange Online
+Feature Group:	E-Mail and calendar access
+Classification:	advisory
+Last Updated:	Wed Nov 4 04:03:54 2026 UTC (Tue Nov 3 23:03:54 2026 EST)
+Root Cause:	A recent service change contained a code regression and was resulting in inconsistent results when users viewed the hybrid free/busy information for Exchange Online users.
+Next Update:	N/A
+expand section Details
+
+OO1537414 - Some users may be unable to access Microsoft Word, PowerPoint, or Excel for the web
+Status:	serviceRestored
+Start Time:	Tue Nov 3 21:24:43 2026 UTC (Tue Nov 3 16:24:43 2026 EST)
+End Time:	Tue Nov 3 22:35:05 2026 UTC (Tue Nov 3 17:35:05 2026 EST)
+Service:	Microsoft 365 for the web
+Feature Group:	Word Online
+Classification:	incident
+Last Updated:	Tue Nov 3 22:57:04 2026 UTC (Tue Nov 3 17:57:04 2026 EST)
+Root Cause:	A recent change intended to update the process by which access requests are routed introduced a header issue which resulted in the impact.
+Next Update:	N/A
+expand section Details
+
+TM1537403 - Users may be unable to download meeting transcripts in docx format from Microsoft Teams
+Status:	serviceRestored
+Start Time:	Mon Nov 2 12:42:00 2026 UTC (Mon Nov 2 07:42:00 2026 EST)
+End Time:	Tue Nov 3 21:24:15 2026 UTC (Tue Nov 3 16:24:15 2026 EST)
+Service:	Microsoft Teams
+Feature Group:	Teams Components
+Classification:	advisory
+Last Updated:	Tue Nov 3 21:25:16 2026 UTC (Tue Nov 3 16:25:16 2026 EST)
+Root Cause:	A recent deployment contained reliability issues, which led to impact.
+Next Update:	N/A
+expand section Details
+
+TM1536687 - Some users may be unable to load their calendar in the Microsoft Teams web app
+Status:	serviceRestored
+Start Time:	Tue Nov 3 10:58:09 2026 UTC (Tue Nov 3 05:58:09 2026 EST)
+End Time:	Tue Nov 3 17:34:06 2026 UTC (Tue Nov 3 12:34:06 2026 EST)
+Service:	Microsoft Teams
+Feature Group:	Teams Components
+Classification:	advisory
+Last Updated:	Tue Nov 3 17:51:52 2026 UTC (Tue Nov 3 12:51:52 2026 EST)
+Root Cause:	A recent configuration change to the way licensing is checked within the environment contained an error, which resulted in a portion of the supporting infrastructure for this feature becoming unhealthy and this impacting event.
+Next Update:	N/A
+expand section Details
+
+MO1535688 - Some admins' Microsoft 365 Copilot and Copilot Chat usage reports may be delayed in the Microsoft 365 admin center
+Status:	serviceDegradation
+Start Time:	Mon Nov 2 00:00:00 2026 UTC (Sun Nov 1 19:00:00 2026 EST)
+End Time:	Tue Nov 3 01:20:00 2026 UTC (Mon Nov 2 20:20:00 2026 EST)
+Service:	Microsoft 365 suite
+Feature Group:	Portal
+Classification:	advisory
+Last Updated:	Tue Nov 3 17:44:54 2026 UTC (Tue Nov 3 12:44:54 2026 EST)
+Root Cause:	A degradation in the upstream data pipeline used to populate Copilot and Copilot Chat usage reports caused impact.
+Next Update:	N/A
+expand section Details
+
+SP1535405 - Admins couldn't download the Migration Manager agent from the SharePoint admin center
+Status:	serviceRestored
+Start Time:	Mon Nov 2 09:07:00 2026 UTC (Mon Nov 2 04:07:00 2026 EST)
+End Time:	Tue Nov 3 04:00:00 2026 UTC (Mon Nov 2 23:00:00 2026 EST)
+Service:	SharePoint Online
+Feature Group:	SharePoint Features
+Classification:	advisory
+Last Updated:	Tue Nov 3 13:17:54 2026 UTC (Tue Nov 3 08:17:54 2026 EST)
+Root Cause:	A storage account containing files required for application downloads was inadvertently disabled, which caused the removal of the files needed to execute the download and resulted in impact.
+Next Update:	N/A
+expand section Details
+
+TM1526111 - Users may be unable to send or receive messages, upload images, or schedule meetings in Microsoft Teams
+Status:	postIncidentReviewPublished
+Start Time:	Mon Oct 26 15:01:00 2026 UTC (Mon Oct 26 11:01:00 2026 EDT)
+End Time:	Mon Oct 26 15:42:00 2026 UTC (Mon Oct 26 11:42:00 2026 EDT)
+Service:	Microsoft Teams
+Feature Group:	Teams Components
+Classification:	incident
+Last Updated:	Tue Nov 3 01:38:33 2026 UTC (Mon Nov 2 20:38:33 2026 EST)
+Root Cause:	N/A
+Next Update:	N/A
+expand section Details
+
+CP1535460 - Users may be unable to generate images in Microsoft 365 Copilot Create
+Status:	serviceRestored
+Start Time:	Fri Oct 30 19:00:00 2026 UTC (Fri Oct 30 15:00:00 2026 EDT)
+End Time:	Mon Nov 2 17:40:00 2026 UTC (Mon Nov 2 12:40:00 2026 EST)
+Service:	Microsoft Copilot (Microsoft 365)
+Feature Group:	Microsoft Copilot (Microsoft 365)
+Classification:	incident
+Last Updated:	Mon Nov 2 19:13:36 2026 UTC (Mon Nov 2 14:13:36 2026 EST)
+Root Cause:	A recent feature update included a misconfiguration in the Create module, which led to this impact.
+Next Update:	N/A
+expand section Details
+
+EX1479349 - Users may be unable to reply or reply-all to email messages sent to Microsoft 365 groups in Exchange Online
+Status:	serviceRestored
+Start Time:	Tue Sep 8 23:00:00 2026 UTC (Tue Sep 8 19:00:00 2026 EDT)
+End Time:	Wed Oct 28 19:57:24 2026 UTC (Wed Oct 28 15:57:24 2026 EDT)
+Service:	Exchange Online
+Feature Group:	E-Mail timely delivery
+Classification:	advisory
+Last Updated:	Mon Nov 2 18:50:30 2026 UTC (Mon Nov 2 13:50:30 2026 EST)
+Root Cause:	A recent change made to the service removed an attribute component from the service process that required that attribute, which was resulting in this impact.
+Next Update:	N/A
+expand section Details
+
+OD1530155 - Admins were unable to complete Microsoft OneDrive or SharePoint site migrations
+Status:	serviceRestored
+Start Time:	Wed Oct 28 18:29:00 2026 UTC (Wed Oct 28 14:29:00 2026 EDT)
+End Time:	Fri Oct 30 22:30:00 2026 UTC (Fri Oct 30 18:30:00 2026 EDT)
+Service:	Microsoft OneDrive
+Feature Group:	OneDrive for Business
+Classification:	incident
+Last Updated:	Mon Nov 2 15:38:08 2026 UTC (Mon Nov 2 10:38:08 2026 EST)
+Root Cause:	A configuration issue within a backend migration job resulted in impact.
+Next Update:	N/A
+expand section Details
+
+EX1531593 - Users may be unable to access Notes in Outlook on the web
+Status:	serviceRestored
+Start Time:	Fri Oct 30 07:52:00 2026 UTC (Fri Oct 30 03:52:00 2026 EDT)
+End Time:	Fri Oct 30 13:10:00 2026 UTC (Fri Oct 30 09:10:00 2026 EDT)
+Service:	Exchange Online
+Feature Group:	E-Mail and calendar access
+Classification:	advisory
+Last Updated:	Mon Nov 2 02:31:34 2026 UTC (Sun Nov 1 21:31:34 2026 EST)
+Root Cause:	A configuration issue caused requests for Notes in Outlook on the web to fail, which resulted in users being unable to access their notes.
+Next Update:	N/A
+expand section Details
+
+MO1457843 - Admins can't identify who deleted a Viva Engage community or its Microsoft 365 Group in Microsoft Entra ID audit logs
+Status:	serviceDegradation
+Start Time:	Fri Jul 10 14:05:00 2026 UTC (Fri Jul 10 10:05:00 2026 EDT)
+End Time:	Thu Oct 22 16:30:00 2026 UTC (Thu Oct 22 12:30:00 2026 EDT)
+Service:	Microsoft 365 suite
+Feature Group:	Administration
+Classification:	advisory
+Last Updated:	Sat Oct 31 00:04:58 2026 UTC (Fri Oct 30 20:04:58 2026 EDT)
+Root Cause:	A recent update to improve group deletions of Viva Engage communities within Microsoft Teams resulted in impact.
+Next Update:	N/A
+expand section Details
+
+EX1532233 - External users’ replies to encrypted email messages may not be delivered in Exchange Online
+Status:	serviceRestored
+Start Time:	Thu Oct 29 16:00:00 2026 UTC (Thu Oct 29 12:00:00 2026 EDT)
+End Time:	Fri Oct 30 22:11:00 2026 UTC (Fri Oct 30 18:11:00 2026 EDT)
+Service:	Exchange Online
+Feature Group:	E-Mail timely delivery
+Classification:	incident
+Last Updated:	Fri Oct 30 22:24:42 2026 UTC (Fri Oct 30 18:24:42 2026 EDT)
+Root Cause:	An anti-spam rule was being triggered on internal domains associated with encrypted message delivery, resulting in impact.
+Next Update:	N/A
+expand section Details
+
+DZ1528963 - Some admins see duplicate submissions and alerts in Microsoft Defender XDR when users submit email messages
+Status:	serviceRestored
+Start Time:	Tue Sep 22 20:00:00 2026 UTC (Tue Sep 22 16:00:00 2026 EDT)
+End Time:	Fri Oct 30 18:00:55 2026 UTC (Fri Oct 30 14:00:55 2026 EDT)
+Service:	Microsoft Defender XDR
+Feature Group:	Microsoft Defender for Office 365
+Classification:	advisory
+Last Updated:	Fri Oct 30 18:35:18 2026 UTC (Fri Oct 30 14:35:18 2026 EDT)
+Root Cause:	System settings for retries on failed email message submissions in parallel with a narrow timeout window resulted in a large number of Microsoft Defender XDR duplicate submissions and alerts,
+Next Update:	N/A
+expand section Details
+
+DZ1530894 - Users that have premium license for Microsoft Defender for Servers (DFS) P2 may not see baseline data
+Status:	serviceRestored
+Start Time:	Wed Oct 14 14:00:00 2026 UTC (Wed Oct 14 10:00:00 2026 EDT)
+End Time:	Fri Oct 30 01:41:28 2026 UTC (Thu Oct 29 21:41:28 2026 EDT)
+Service:	Microsoft Defender XDR
+Feature Group:	Microsoft Defender for Endpoint
+Classification:	advisory
+Last Updated:	Fri Oct 30 01:42:25 2026 UTC (Thu Oct 29 21:42:25 2026 EDT)
+Root Cause:	A recent service change that introduced a configuration issue that prevented the baseline data from being communicated to the portal.
+Next Update:	N/A
+expand section Details
+
+MO1522731 - Admin usage reports for Microsoft 365 apps and Exchange Online may have refresh delays
+Status:	serviceRestored
+Start Time:	Fri Oct 23 00:00:00 2026 UTC (Thu Oct 22 20:00:00 2026 EDT)
+End Time:	Thu Oct 29 21:26:35 2026 UTC (Thu Oct 29 17:26:35 2026 EDT)
+Service:	Microsoft 365 suite
+Feature Group:	Administration
+Classification:	advisory
+Last Updated:	Thu Oct 29 21:52:27 2026 UTC (Thu Oct 29 17:52:27 2026 EDT)
+Root Cause:	An issue with the pipeline for our upstream data source responsible for timely report data in the admin center was causing reporting delays.
+Next Update:	N/A
+expand section Details
+
+EX1528992 - Users may not be able to open email file attachments or see the "Open" option in the new Outlook desktop app
+Status:	serviceRestored
+Start Time:	Wed Oct 28 16:24:46 2026 UTC (Wed Oct 28 12:24:46 2026 EDT)
+End Time:	Thu Oct 29 20:31:57 2026 UTC (Thu Oct 29 16:31:57 2026 EDT)
+Service:	Exchange Online
+Feature Group:	E-Mail and calendar access
+Classification:	advisory
+Last Updated:	Thu Oct 29 20:32:26 2026 UTC (Thu Oct 29 16:32:26 2026 EDT)
+Root Cause:	A recent update to Edge Version 156 unintentionally enabled an unnecessary configuration change and caused impact.
+Next Update:	N/A
+expand section Details
+
+CP1528420 - Users may be unable to open the SharePoint and Microsoft OneDrive file picker in Agent Builder within Microsoft Copilot
+Status:	serviceRestored
+Start Time:	Tue Oct 27 02:22:00 2026 UTC (Mon Oct 26 22:22:00 2026 EDT)
+End Time:	Thu Oct 29 16:41:00 2026 UTC (Thu Oct 29 12:41:00 2026 EDT)
+Service:	Microsoft Copilot (Microsoft 365)
+Feature Group:	Microsoft Copilot (Microsoft 365)
+Classification:	advisory
+Last Updated:	Thu Oct 29 18:30:36 2026 UTC (Thu Oct 29 14:30:36 2026 EDT)
+Root Cause:	A recent update to the Microsoft 365 Copilot app changed how it handled SharePoint and OneDrive sign-in requests and caused the affected requests to be passed to the app in an older format, resulting in authentication failures when users opened the cloud file picker to add knowledge.
+Next Update:	N/A
+expand section Details
+
+CP1510883 - Users may be unable to create SharePoint knowledge agents using Microsoft 365 Copilot in SharePoint Online
+Status:	serviceRestored
+Start Time:	Fri Oct 16 15:46:18 2026 UTC (Fri Oct 16 11:46:18 2026 EDT)
+End Time:	Thu Oct 29 17:11:51 2026 UTC (Thu Oct 29 13:11:51 2026 EDT)
+Service:	Microsoft Copilot (Microsoft 365)
+Feature Group:	Microsoft Copilot (Microsoft 365)
+Classification:	incident
+Last Updated:	Thu Oct 29 17:24:10 2026 UTC (Thu Oct 29 13:24:10 2026 EDT)
+Root Cause:	A recent service change had a missing configuration that prevented the licensing from being fetched and validated, which resulted in the impact.
+Next Update:	N/A
+expand section Details
+
+DZ1528748 - Users may have experienced a delay in ingestion and processing of activities in Microsoft Defender for Cloud Apps
+Status:	serviceRestored
+Start Time:	Wed Oct 28 10:10:00 2026 UTC (Wed Oct 28 06:10:00 2026 EDT)
+End Time:	Wed Oct 28 14:30:00 2026 UTC (Wed Oct 28 10:30:00 2026 EDT)
+Service:	Microsoft Defender XDR
+Feature Group:	Microsoft Defender for Cloud Apps
+Classification:	advisory
+Last Updated:	Thu Oct 29 14:36:51 2026 UTC (Thu Oct 29 10:36:51 2026 EDT)
+Root Cause:	A section of infrastructure, responsible for processing activities in Microsoft Defender for Cloud Apps, became unresponsive and resulted in impact.
+Next Update:	N/A
+expand section Details
+
+PB1528889 - Some users may see Azure Maps visuals are blank and aren't loading as expected in Microsoft Fabric
+Status:	serviceRestored
+Start Time:	Tue Oct 27 17:20:00 2026 UTC (Tue Oct 27 13:20:00 2026 EDT)
+End Time:	Wed Oct 28 22:21:55 2026 UTC (Wed Oct 28 18:21:55 2026 EDT)
+Service:	Power BI
+Feature Group:	Fabric
+Classification:	advisory
+Last Updated:	Wed Oct 28 22:29:09 2026 UTC (Wed Oct 28 18:29:09 2026 EDT)
+Root Cause:	A recent service update introduced an offending code regression that prevented Azure Maps visuals from loading as expected in Microsoft Fabric.
+Next Update:	N/A
+expand section Details
+
+MO1481173 - Admins may see multiple usage reports not updating in the Microsoft 365 admin center
+Status:	serviceRestored
+Start Time:	Mon Sep 28 22:36:21 2026 UTC (Mon Sep 28 18:36:21 2026 EDT)
+End Time:	Wed Oct 28 20:41:44 2026 UTC (Wed Oct 28 16:41:44 2026 EDT)
+Service:	Microsoft 365 suite
+Feature Group:	Portal
+Classification:	advisory
+Last Updated:	Wed Oct 28 20:44:13 2026 UTC (Wed Oct 28 16:44:13 2026 EDT)
+Root Cause:	An upstream process responsible for managing user data was unable to process data as effectively as expected, which led to delays populating user reports.
+Next Update:	N/A
+expand section Details
+
+TM1528936 - Admins may be unable to access Best Practices content in the Microsoft Teams admin center
+Status:	serviceRestored
+Start Time:	Wed Oct 28 15:00:51 2026 UTC (Wed Oct 28 11:00:51 2026 EDT)
+End Time:	Wed Oct 28 19:18:16 2026 UTC (Wed Oct 28 15:18:16 2026 EDT)
+Service:	Microsoft Teams
+Feature Group:	Teams Components
+Classification:	advisory
+Last Updated:	Wed Oct 28 19:18:45 2026 UTC (Wed Oct 28 15:18:45 2026 EDT)
+Root Cause:	A recent update introduced a code regression for the subset of infrastructure that supported access to the Best Practices content and CQD report queries in the Microsoft Teams admin center.
+Next Update:	N/A
+expand section Details
+
+CP1528503 - Some users may have been unable to access Microsoft Copilot across multiple Microsoft 365 applications
+Status:	serviceRestored
+Start Time:	Wed Oct 28 07:38:56 2026 UTC (Wed Oct 28 03:38:56 2026 EDT)
+End Time:	Wed Oct 28 09:26:24 2026 UTC (Wed Oct 28 05:26:24 2026 EDT)
+Service:	Microsoft Copilot (Microsoft 365)
+Feature Group:	Microsoft Copilot (Microsoft 365)
+Classification:	incident
+Last Updated:	Wed Oct 28 12:48:23 2026 UTC (Wed Oct 28 08:48:23 2026 EDT)
+Root Cause:	A section of networking infrastructure, responsible for facilitating Microsoft Copilot access in multiple Microsoft 365 applications, became unresponsive and resulted in impact.
+Next Update:	N/A
+expand section Details
+
+EX1527500 - Some users may see intermittent failures when accessing Exchange Online through Representational State Transfer (REST)
+Status:	serviceRestored
+Start Time:	Tue Oct 27 15:56:24 2026 UTC (Tue Oct 27 11:56:24 2026 EDT)
+End Time:	Wed Oct 28 00:08:48 2026 UTC (Tue Oct 27 20:08:48 2026 EDT)
+Service:	Exchange Online
+Feature Group:	E-Mail and calendar access
+Classification:	incident
+Last Updated:	Wed Oct 28 00:55:49 2026 UTC (Tue Oct 27 20:55:49 2026 EDT)
+Root Cause:	A directory service component configuration change intended to further optimize the service was resulting in impact.
+Next Update:	N/A
+expand section Details
+
+EX1519316 - Some users may be unable to access their Exchange Online mailboxes using new Outlook or Outlook on the web
+Status:	serviceRestored
+Start Time:	Wed Sep 30 00:00:00 2026 UTC (Tue Sep 29 20:00:00 2026 EDT)
+End Time:	Tue Oct 27 22:50:00 2026 UTC (Tue Oct 27 18:50:00 2026 EDT)
+Service:	Exchange Online
+Feature Group:	E-Mail and calendar access
+Classification:	advisory
+Last Updated:	Wed Oct 28 00:09:34 2026 UTC (Tue Oct 27 20:09:34 2026 EDT)
+Root Cause:	A recent service change to the Microsoft Windows Operating System (OS) introduced an issue in which the service side was reflecting more Exchange Online sessions than were actually active, which led to "TooManyObjectsOpenedException" errors and caused impact.
+Next Update:	N/A
+expand section Details
+
+PB1527694 - Some users in East US may receive intermittent timeouts when interacting with Spark Notebooks, Lakehouse, or Pipelines
+Status:	serviceRestored
+Start Time:	Sat Oct 24 15:55:00 2026 UTC (Sat Oct 24 11:55:00 2026 EDT)
+End Time:	Wed Oct 28 00:00:31 2026 UTC (Tue Oct 27 20:00:31 2026 EDT)
+Service:	Power BI
+Feature Group:	Fabric
+Classification:	advisory
+Last Updated:	Wed Oct 28 00:02:23 2026 UTC (Tue Oct 27 20:02:23 2026 EDT)
+Root Cause:	Delays in request processing with the storage infrastructure utilized for Spark Notebooks, Lakehouse, or Pipelines interactions was resulting in impact.
+Next Update:	N/A
+expand section Details
+
+DZ1527734 - Admins may encounter delays in Microsoft Defender threat detection alerts
+Status:	serviceRestored
+Start Time:	Tue Oct 27 17:52:54 2026 UTC (Tue Oct 27 13:52:54 2026 EDT)
+End Time:	Tue Oct 27 18:21:30 2026 UTC (Tue Oct 27 14:21:30 2026 EDT)
+Service:	Microsoft Defender XDR
+Feature Group:	Microsoft Defender for Endpoint
+Classification:	advisory
+Last Updated:	Tue Oct 27 18:33:04 2026 UTC (Tue Oct 27 14:33:04 2026 EDT)
+Root Cause:	An Azure database issue caused a delay in reporting, resulting in impact.
+Next Update:	N/A
+expand section Details
+
+OP1514821 - Some users may be unable to access or protect content using Azure Rights Management (ARM) across Microsoft 365 services
+Status:	postIncidentReviewPublished
+Start Time:	Mon Oct 19 06:30:00 2026 UTC (Mon Oct 19 02:30:00 2026 EDT)
+End Time:	Mon Oct 19 09:19:00 2026 UTC (Mon Oct 19 05:19:00 2026 EDT)
+Service:	Microsoft 365 apps
+Feature Group:	Office Client issues
+Classification:	incident
+Last Updated:	Mon Oct 26 20:25:21 2026 UTC (Mon Oct 26 16:25:21 2026 EDT)
+Root Cause:	A significant increase in requests from several Microsoft 365 services exceeded the available processing capacity of the Azure Rights Management (ARM) front-end service. We identified that one contributing service had recently adopted a new software component that did not respond correctly to instructions to slow retry attempts, causing requests to be repeated more frequently than intended. The resulting resource pressure made some service components unhealthy and unable to process traffic reliably.
+Next Update:	N/A
+expand section Details
+
+TM1517449 - Users may not receive notifications when added to or removed from tags in Microsoft Teams
+Status:	serviceRestored
+Start Time:	Thu Sep 24 09:19:00 2026 UTC (Thu Sep 24 05:19:00 2026 EDT)
+End Time:	Mon Oct 26 20:17:32 2026 UTC (Mon Oct 26 16:17:32 2026 EDT)
+Service:	Microsoft Teams
+Feature Group:	Teams Components
+Classification:	advisory
+Last Updated:	Mon Oct 26 20:19:08 2026 UTC (Mon Oct 26 16:19:08 2026 EDT)
+Root Cause:	A recent update to the authentication flow contained an issue that resulted in impact to tag notifications.
+Next Update:	N/A
+expand section Details
+
+MV1526068 - Some users may be unable to access the group feed with Microsoft Viva Engage
+Status:	serviceRestored
+Start Time:	Mon Oct 26 14:45:04 2026 UTC (Mon Oct 26 10:45:04 2026 EDT)
+End Time:	Mon Oct 26 16:40:59 2026 UTC (Mon Oct 26 12:40:59 2026 EDT)
+Service:	Microsoft Viva
+Feature Group:	Viva Engage
+Classification:	incident
+Last Updated:	Mon Oct 26 16:51:49 2026 UTC (Mon Oct 26 12:51:49 2026 EDT)
+Root Cause:	A subset of service infrastructure that helps facilitate access to the Viva Engage group feed had fallen below our manageable service performance thresholds, resulting in impact.
+Next Update:	N/A
+expand section Details
+
+IT1516138 - Admins may not be able to identify non-compliant device settings as expected in Microsoft Intune
+Status:	serviceRestored
+Start Time:	Fri Aug 7 19:53:00 2026 UTC (Fri Aug 7 15:53:00 2026 EDT)
+End Time:	Sun Oct 25 17:13:15 2026 UTC (Sun Oct 25 13:13:15 2026 EDT)
+Service:	Microsoft Intune
+Feature Group:	Microsoft Intune
+Classification:	advisory
+Last Updated:	Sun Oct 25 17:25:29 2026 UTC (Sun Oct 25 13:25:29 2026 EDT)
+Root Cause:	A previous change to the generation of unique Policy and Settings metadata identifiers caused some policy documents to be malformed, which caused some non-compliant settings to incorrectly show as compliant.
+Next Update:	N/A
+expand section Details
+
+CW1523046 - Users may be seeing unexpected users when changing accounts in Microsoft 365 Copilot Chat
+Status:	serviceRestored
+Start Time:	Mon Oct 5 11:23:00 2026 UTC (Mon Oct 5 07:23:00 2026 EDT)
+End Time:	Fri Oct 23 22:30:00 2026 UTC (Fri Oct 23 18:30:00 2026 EDT)
+Service:	Microsoft 365 Copilot Chat
+Feature Group:	Microsoft 365 Copilot Chat
+Classification:	advisory
+Last Updated:	Fri Oct 23 23:19:37 2026 UTC (Fri Oct 23 19:19:37 2026 EDT)
+Root Cause:	A recently deployed build of Microsoft 365 Copilot Chat contained an issue that showed unexpected users when changing accounts in Microsoft 365 Copilot Chat.
+Next Update:	N/A
+expand section Details
+
+MV1522708 - Users may be unable to import .XLSX files in Microsoft Viva Glint
+Status:	serviceRestored
+Start Time:	Thu Oct 22 12:00:00 2026 UTC (Thu Oct 22 08:00:00 2026 EDT)
+End Time:	Fri Oct 23 20:51:46 2026 UTC (Fri Oct 23 16:51:46 2026 EDT)
+Service:	Microsoft Viva
+Feature Group:	Viva Glint
+Classification:	advisory
+Last Updated:	Fri Oct 23 20:53:48 2026 UTC (Fri Oct 23 16:53:48 2026 EDT)
+Root Cause:	A recent change intended to improve record count accuracy introduced a code conflict that caused .XLSX file types to be misidentified, resulting in these files not recognized and failing to upload in Viva Glint.
+Next Update:	N/A
+expand section Details
+
+DZ1515123 - Users may be unable to make API calls or access the Microsoft Defender Vulnerability Management portal
+Status:	serviceRestored
+Start Time:	Wed Oct 14 06:00:00 2026 UTC (Wed Oct 14 02:00:00 2026 EDT)
+End Time:	Fri Oct 23 16:26:26 2026 UTC (Fri Oct 23 12:26:26 2026 EDT)
+Service:	Microsoft Defender XDR
+Feature Group:	Microsoft Defender for Endpoint
+Classification:	advisory
+Last Updated:	Fri Oct 23 16:26:37 2026 UTC (Fri Oct 23 12:26:37 2026 EDT)
+Root Cause:	An unusually large increase in requests to a portion of the infrastructure supporting Microsoft Defender Vulnerability Management was causing timeouts when users attempted to make API calls or access the portal which resulted in this impact.
+Next Update:	N/A
+expand section Details
+
+SP1518858 - Users may be unable to perform migrations
+Status:	serviceRestored
+Start Time:	Wed Oct 21 10:10:45 2026 UTC (Wed Oct 21 06:10:45 2026 EDT)
+End Time:	Thu Oct 22 19:52:28 2026 UTC (Thu Oct 22 15:52:28 2026 EDT)
+Service:	SharePoint Online
+Feature Group:	Provisioning
+Classification:	incident
+Last Updated:	Thu Oct 22 19:54:57 2026 UTC (Thu Oct 22 15:54:57 2026 EDT)
+Root Cause:	A configuration issue made components that facilitate migrations leveraging the MMP API unavailable, which prevented users from performing certain migrations.
+Next Update:	N/A
+expand section Details
+
+CP1519553 - Admins may see delayed Microsoft 365 Copilot usage and Copilot Chat usage data in the Microsoft 365 admin center
+Status:	serviceRestored
+Start Time:	Wed Oct 21 00:00:00 2026 UTC (Tue Oct 20 20:00:00 2026 EDT)
+End Time:	Thu Oct 22 18:51:44 2026 UTC (Thu Oct 22 14:51:44 2026 EDT)
+Service:	Microsoft Copilot (Microsoft 365)
+Feature Group:	Microsoft Copilot (Microsoft 365)
+Classification:	advisory
+Last Updated:	Thu Oct 22 18:52:55 2026 UTC (Thu Oct 22 14:52:55 2026 EDT)
+Root Cause:	A compatibility issue in the upstream data processing pipeline supporting Microsoft 365 Copilot usage reporting resulted in impact.
+Next Update:	N/A
+expand section Details
+
+EX1477761 - Admins experience intermittent failures adding, modifying or removing members from Exchange Online distribution groups
+Status:	serviceRestored
+Start Time:	Tue Jun 9 21:43:00 2026 UTC (Tue Jun 9 17:43:00 2026 EDT)
+End Time:	Thu Oct 22 15:00:00 2026 UTC (Thu Oct 22 11:00:00 2026 EDT)
+Service:	Exchange Online
+Feature Group:	Management and Provisioning
+Classification:	advisory
+Last Updated:	Thu Oct 22 17:52:02 2026 UTC (Thu Oct 22 13:52:02 2026 EDT)
+Root Cause:	A conflict between a configuration and a recent update was preventing admins from adding or removing users from distribution groups for on-premises configurations.
+Next Update:	N/A
+expand section Details
+
+TM1519335 - SIP devices can't make or receive calls
+Status:	serviceRestored
+Start Time:	Wed Oct 21 18:00:00 2026 UTC (Wed Oct 21 14:00:00 2026 EDT)
+End Time:	Thu Oct 22 15:30:00 2026 UTC (Thu Oct 22 11:30:00 2026 EDT)
+Service:	Microsoft Teams
+Feature Group:	Teams Components
+Classification:	incident
+Last Updated:	Thu Oct 22 16:50:05 2026 UTC (Thu Oct 22 12:50:05 2026 EDT)
+Root Cause:	A configuration issue had impacted components that manage SIP devices, resulting in impact.
+Next Update:	N/A
+expand section Details
+
+CW1507178 - Some users were unable to see model selection options in Microsoft 365 Copilot chat
+Status:	postIncidentReviewPublished
+Start Time:	Wed Oct 14 03:34:00 2026 UTC (Tue Oct 13 23:34:00 2026 EDT)
+End Time:	Wed Oct 14 09:30:00 2026 UTC (Wed Oct 14 05:30:00 2026 EDT)
+Service:	Microsoft 365 Copilot Chat
+Feature Group:	Microsoft 365 Copilot Chat
+Classification:	incident
+Last Updated:	Thu Oct 22 13:19:08 2026 UTC (Thu Oct 22 09:19:08 2026 EDT)
+Root Cause:	N/A
+Next Update:	N/A
+expand section Details
+
+DZ1519662 - The Microsoft Defender portal was not displaying affected products for some Common Vulnerabilities and Exposures (CVEs)
+Status:	serviceRestored
+Start Time:	Wed Oct 21 21:00:00 2026 UTC (Wed Oct 21 17:00:00 2026 EDT)
+End Time:	Thu Oct 22 12:45:00 2026 UTC (Thu Oct 22 08:45:00 2026 EDT)
+Service:	Microsoft Defender XDR
+Feature Group:	Microsoft Defender for Endpoint
+Classification:	advisory
+Last Updated:	Thu Oct 22 13:16:27 2026 UTC (Thu Oct 22 09:16:27 2026 EDT)
+Root Cause:	A configuration issue resulted in some components that manage the user interface for the Microsoft Defender portal become unavailable, which caused products for some Common Vulnerabilities and Exposures (CVEs) to not be displayed.
+Next Update:	N/A
+expand section Details
+
+SP1503038 - Users may be unable to view or modify custom forms in SharePoint Online
+Status:	postIncidentReviewPublished
+Start Time:	Mon Oct 12 01:00:00 2026 UTC (Sun Oct 11 21:00:00 2026 EDT)
+End Time:	Thu Oct 15 00:30:00 2026 UTC (Wed Oct 14 20:30:00 2026 EDT)
+Service:	SharePoint Online
+Feature Group:	SharePoint Features
+Classification:	incident
+Last Updated:	Wed Oct 21 23:54:51 2026 UTC (Wed Oct 21 19:54:51 2026 EDT)
+Root Cause:	SharePoint Online had been running a new version of the component that supplies page data alongside the existing one, and as part of a planned change that new version was promoted to become the primary one. It did not correctly handle two of the request patterns that custom forms rely on when a page loads, so requests for page data stopped partway through. Because the first part of the page had already been sent to the browser, the service was not able to replace it with an error message, which is why affected users saw a blank form rather than an explanation.
+Next Update:	N/A
+expand section Details
+
+MV1519166 - Users may be unable to access the group feed in Microsoft Viva Engage
+Status:	serviceRestored
+Start Time:	Wed Oct 21 14:01:00 2026 UTC (Wed Oct 21 10:01:00 2026 EDT)
+End Time:	Wed Oct 21 16:47:17 2026 UTC (Wed Oct 21 12:47:17 2026 EDT)
+Service:	Microsoft Viva
+Feature Group:	Viva Engage
+Classification:	advisory
+Last Updated:	Wed Oct 21 16:50:29 2026 UTC (Wed Oct 21 12:50:29 2026 EDT)
+Root Cause:	A subset of service infrastructure that helps facilitate access to the Microsoft Viva Engage group feed dropped below our manageable service performance thresholds, resulting in impact.
+Next Update:	N/A
+expand section Details
+
+CW1517097 - Some users may not receive responses from Microsoft 365 Copilot Chat in the web and desktop apps
+Status:	serviceRestored
+Start Time:	Tue Oct 20 14:29:11 2026 UTC (Tue Oct 20 10:29:11 2026 EDT)
+End Time:	Tue Oct 20 16:01:39 2026 UTC (Tue Oct 20 12:01:39 2026 EDT)
+Service:	Microsoft 365 Copilot Chat
+Feature Group:	Microsoft 365 Copilot Chat
+Classification:	advisory
+Last Updated:	Wed Oct 21 04:51:15 2026 UTC (Wed Oct 21 00:51:15 2026 EDT)
+Root Cause:	N/A
+Next Update:	N/A
+expand section Details
+
+MO1505952 - Users may be unable to access multiple Microsoft 365 services using Global Secure Access (GSA)
+Status:	postIncidentReviewPublished
+Start Time:	Tue Oct 13 07:40:00 2026 UTC (Tue Oct 13 03:40:00 2026 EDT)
+End Time:	Tue Oct 13 18:31:00 2026 UTC (Tue Oct 13 14:31:00 2026 EDT)
+Service:	Microsoft 365 suite
+Feature Group:	Portal
+Classification:	incident
+Last Updated:	Wed Oct 21 00:08:42 2026 UTC (Tue Oct 20 20:08:42 2026 EDT)
+Root Cause:	A section of GSA infrastructure was performing below acceptable performance thresholds, affecting connectivity to Microsoft 365 services and resulting in impact.
+Next Update:	N/A
+expand section Details
+
+CP1517145 - Some users may not receive responses from Microsoft 365 Copilot in the web and desktop apps
+Status:	serviceRestored
+Start Time:	Tue Oct 20 14:54:29 2026 UTC (Tue Oct 20 10:54:29 2026 EDT)
+End Time:	Tue Oct 20 16:01:13 2026 UTC (Tue Oct 20 12:01:13 2026 EDT)
+Service:	Microsoft Copilot (Microsoft 365)
+Feature Group:	Microsoft Copilot (Microsoft 365)
+Classification:	incident
+Last Updated:	Tue Oct 20 16:25:38 2026 UTC (Tue Oct 20 12:25:38 2026 EDT)
+Root Cause:	N/A
+Next Update:	N/A
+expand section Details
+
+CP1515501 - Users may not see options to select GPT models in Microsoft 365 Copilot
+Status:	serviceRestored
+Start Time:	Fri Oct 16 07:23:00 2026 UTC (Fri Oct 16 03:23:00 2026 EDT)
+End Time:	Tue Oct 20 03:41:00 2026 UTC (Mon Oct 19 23:41:00 2026 EDT)
+Service:	Microsoft Copilot (Microsoft 365)
+Feature Group:	Microsoft Copilot (Microsoft 365)
+Classification:	incident
+Last Updated:	Tue Oct 20 05:17:23 2026 UTC (Tue Oct 20 01:17:23 2026 EDT)
+Root Cause:	A recent change, which was intended to filter out model groups based on policy ID, introduced a configuration issue that resulted in impact.
+Next Update:	N/A
+expand section Details
+
+TM1514781 - Some users may be unable to join town hall meetings in Microsoft Teams and are redirected to a registration page
+Status:	serviceRestored
+Start Time:	Mon Oct 19 07:56:42 2026 UTC (Mon Oct 19 03:56:42 2026 EDT)
+End Time:	Tue Oct 20 01:13:13 2026 UTC (Mon Oct 19 21:13:13 2026 EDT)
+Service:	Microsoft Teams
+Feature Group:	Teams Components
+Classification:	incident
+Last Updated:	Tue Oct 20 01:22:02 2026 UTC (Mon Oct 19 21:22:02 2026 EDT)
+Root Cause:	A recent service change introduced a code regression that incorrectly required attendee registration information when registration was disabled. As a result, the attendee Join URL was removed from the session response, and prevented users from joining affected town hall meetings.
+Next Update:	N/A
+expand section Details
+
+EX1500900 - Admins are unable to access the Exchange admin center (EAC)
+Status:	postIncidentReviewPublished
+Start Time:	Mon Oct 12 08:15:00 2026 UTC (Mon Oct 12 04:15:00 2026 EDT)
+End Time:	Mon Oct 12 12:50:00 2026 UTC (Mon Oct 12 08:50:00 2026 EDT)
+Service:	Exchange Online
+Feature Group:	E-Mail and calendar access
+Classification:	incident
+Last Updated:	Mon Oct 19 21:04:26 2026 UTC (Mon Oct 19 17:04:26 2026 EDT)
+Root Cause:	During a routine service deployment, an update to the Exchange Admin Center authentication components introduced an incompatibility in the way delegated administrator access tokens were validated.
+Next Update:	N/A
+expand section Details
+
+MO1515549 - Users and admins couldn't view or manage device group configurations through the Microsoft Defender portal
+Status:	serviceRestored
+Start Time:	Mon Oct 19 18:35:18 2026 UTC (Mon Oct 19 14:35:18 2026 EDT)
+End Time:	Mon Oct 19 19:54:49 2026 UTC (Mon Oct 19 15:54:49 2026 EDT)
+Service:	Microsoft 365 suite
+Feature Group:	Administration
+Classification:	advisory
+Last Updated:	Mon Oct 19 20:03:04 2026 UTC (Mon Oct 19 16:03:04 2026 EDT)
+Root Cause:	A code issue in the device groups page was causing a component in the page rendering process to fail to handle the response correctly and was resulting in the page to crash.
+Next Update:	N/A
+expand section Details
+
+PB1514788 - Some users may have experienced intermittent failures with sensitivity-labeled items in Microsoft Fabric
+Status:	serviceRestored
+Start Time:	Mon Oct 19 07:05:00 2026 UTC (Mon Oct 19 03:05:00 2026 EDT)
+End Time:	Mon Oct 19 09:10:00 2026 UTC (Mon Oct 19 05:10:00 2026 EDT)
+Service:	Power BI
+Feature Group:	Fabric
+Classification:	advisory
+Last Updated:	Mon Oct 19 14:33:34 2026 UTC (Mon Oct 19 10:33:34 2026 EDT)
+Root Cause:	A section of infrastructure that facilitates requests for Azure Rights Management services was performing below acceptable performance thresholds, resulting in impact.
+Next Update:	N/A
+expand section Details
+
+CW1515013 - Some users may have been unable to send messages in Microsoft 365 Copilot chat
+Status:	serviceRestored
+Start Time:	Mon Oct 19 07:20:00 2026 UTC (Mon Oct 19 03:20:00 2026 EDT)
+End Time:	Mon Oct 19 09:20:00 2026 UTC (Mon Oct 19 05:20:00 2026 EDT)
+Service:	Microsoft 365 Copilot Chat
+Feature Group:	Microsoft 365 Copilot Chat
+Classification:	incident
+Last Updated:	Mon Oct 19 14:20:37 2026 UTC (Mon Oct 19 10:20:37 2026 EDT)
+Root Cause:	A recent Copilot service update inadvertently increased traffic beyond expected levels, resulting in impact.
+Next Update:	N/A
+expand section Details
+
+EX1483540 - Users were intermittently unable to access their calendars in Outlook on the web and the new Outlook desktop client
+Status:	serviceRestored
+Start Time:	Wed Jul 1 14:49:00 2026 UTC (Wed Jul 1 10:49:00 2026 EDT)
+End Time:	Sat Oct 17 00:33:00 2026 UTC (Fri Oct 16 20:33:00 2026 EDT)
+Service:	Exchange Online
+Feature Group:	E-Mail and calendar access
+Classification:	advisory
+Last Updated:	Mon Oct 19 09:36:50 2026 UTC (Mon Oct 19 05:36:50 2026 EDT)
+Root Cause:	A caching issue caused outdated calendar data to be referenced after the calendar folder information was refreshed, resulting in intermittent calendar access failures.
+Next Update:	N/A
+expand section Details
+
+EX1508985 - Users can't send email messages to some Microsoft 365 groups within Exchange Online
+Status:	serviceRestored
+Start Time:	Wed Oct 14 17:48:00 2026 UTC (Wed Oct 14 13:48:00 2026 EDT)
+End Time:	Sat Oct 17 15:00:00 2026 UTC (Sat Oct 17 11:00:00 2026 EDT)
+Service:	Exchange Online
+Feature Group:	E-Mail timely delivery
+Classification:	incident
+Last Updated:	Sat Oct 17 20:46:45 2026 UTC (Sat Oct 17 16:46:45 2026 EDT)
+Root Cause:	A recent service change caused some Microsoft 365 groups to enter an incorrect state.
+Next Update:	N/A
+expand section Details
+
+TM1508612 - Some users may not receive meeting-started notifications on Android devices
+Status:	serviceRestored
+Start Time:	Tue Oct 13 23:03:00 2026 UTC (Tue Oct 13 19:03:00 2026 EDT)
+End Time:	Fri Oct 16 07:35:00 2026 UTC (Fri Oct 16 03:35:00 2026 EDT)
+Service:	Microsoft Teams
+Feature Group:	Teams Components
+Classification:	advisory
+Last Updated:	Fri Oct 16 20:49:06 2026 UTC (Fri Oct 16 16:49:06 2026 EDT)
+Root Cause:	A recent notification service change intended to address an unrelated issue affected meeting-started notifications for Android users.
+Next Update:	N/A
+expand section Details
+
+TM1492872 - Users may be unable to download webinar registration details from the Events app in Microsoft Teams
+Status:	serviceRestored
+Start Time:	Fri Oct 9 18:56:09 2026 UTC (Fri Oct 9 14:56:09 2026 EDT)
+End Time:	Fri Oct 16 19:24:22 2026 UTC (Fri Oct 16 15:24:22 2026 EDT)
+Service:	Microsoft Teams
+Feature Group:	Teams Components
+Classification:	advisory
+Last Updated:	Fri Oct 16 19:34:20 2026 UTC (Fri Oct 16 15:34:20 2026 EDT)
+Root Cause:	A recent service update introduced a regression that caused the registration report download option to become unavailable when the engagement reporting policy was disabled, despite the report being independent of this policy.
+Next Update:	N/A
+expand section Details
+
+OP1505951 - Some users may be unable to create or publish assignments in Microsoft OneNote
+Status:	serviceRestored
+Start Time:	Sun Oct 11 12:10:00 2026 UTC (Sun Oct 11 08:10:00 2026 EDT)
+End Time:	Fri Oct 16 14:25:00 2026 UTC (Fri Oct 16 10:25:00 2026 EDT)
+Service:	Microsoft 365 apps
+Feature Group:	Office Client issues
+Classification:	advisory
+Last Updated:	Fri Oct 16 18:29:53 2026 UTC (Fri Oct 16 14:29:53 2026 EDT)
+Root Cause:	A recent update to the authentication flow utilized in this event contained an issue, which is resulting in this issue.
+Next Update:	N/A
+expand section Details
+
+TM1509890 - Some users' calls may fail in Microsoft Teams
+Status:	serviceRestored
+Start Time:	Fri Oct 16 02:15:48 2026 UTC (Thu Oct 15 22:15:48 2026 EDT)
+End Time:	Fri Oct 16 17:26:01 2026 UTC (Fri Oct 16 13:26:01 2026 EDT)
+Service:	Microsoft Teams
+Feature Group:	Teams Components
+Classification:	incident
+Last Updated:	Fri Oct 16 17:32:24 2026 UTC (Fri Oct 16 13:32:24 2026 EDT)
+Root Cause:	A recent configuration change that managed how phone numbers were processed was responsible for impact.
+Next Update:	N/A
+expand section Details
+
+TM1506205 - Users may be unable to join Microsoft Teams meetings and see sign-in errors
+Status:	serviceRestored
+Start Time:	Wed Oct 7 01:00:00 2026 UTC (Tue Oct 6 21:00:00 2026 EDT)
+End Time:	Fri Oct 16 03:30:00 2026 UTC (Thu Oct 15 23:30:00 2026 EDT)
+Service:	Microsoft Teams
+Feature Group:	Teams Components
+Classification:	incident
+Last Updated:	Fri Oct 16 04:35:46 2026 UTC (Fri Oct 16 00:35:46 2026 EDT)
+Root Cause:	A recent change to the authentication flow utilized in the event contained a regression, which resulted in impact.
+Next Update:	N/A
+expand section Details
+
+DZ1509195 - Users see delays in Microsoft Defender for Identity event-based experiences
+Status:	serviceRestored
+Start Time:	Thu Oct 15 18:04:26 2026 UTC (Thu Oct 15 14:04:26 2026 EDT)
+End Time:	Thu Oct 15 19:23:22 2026 UTC (Thu Oct 15 15:23:22 2026 EDT)
+Service:	Microsoft Defender XDR
+Feature Group:	Microsoft Defender for Identity
+Classification:	advisory
+Last Updated:	Thu Oct 15 19:24:36 2026 UTC (Thu Oct 15 15:24:36 2026 EDT)
+Root Cause:	N/A
+Next Update:	N/A
+expand section Details
+
+PB1508905 - Some users may encounter refresh failures when using the Dynamics 365 Business Central connector in Power BI
+Status:	serviceRestored
+Start Time:	Wed Oct 14 15:00:00 2026 UTC (Wed Oct 14 11:00:00 2026 EDT)
+End Time:	Thu Oct 15 14:55:10 2026 UTC (Thu Oct 15 10:55:10 2026 EDT)
+Service:	Power BI
+Feature Group:	Power BI
+Classification:	advisory
+Last Updated:	Thu Oct 15 15:41:43 2026 UTC (Thu Oct 15 11:41:43 2026 EDT)
+Root Cause:	A regression in the Dynamics 365 Business Central control-plane service was causing refresh failures when using the connector in Power BI
+Next Update:	N/A
+expand section Details
+
+OO1508394 - Users are unable to open presentations in PowerPoint Online for the web
+Status:	serviceRestored
+Start Time:	Wed Oct 14 22:38:00 2026 UTC (Wed Oct 14 18:38:00 2026 EDT)
+End Time:	Thu Oct 15 03:00:00 2026 UTC (Wed Oct 14 23:00:00 2026 EDT)
+Service:	Microsoft 365 for the web
+Feature Group:	PowerPoint Online
+Classification:	advisory
+Last Updated:	Thu Oct 15 06:03:11 2026 UTC (Thu Oct 15 02:03:11 2026 EDT)
+Root Cause:	A recent deployment to the service infrastructure contained a code issue which led to a spike in request failures to the service.
+Next Update:	N/A
