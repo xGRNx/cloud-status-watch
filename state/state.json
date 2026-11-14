@@ -169,21 +169,14 @@
    "title": "Elevated errors affecting Connectors"
   }
  },
- "health": {
-  "ms_stale": {
-   "alerted": true,
-   "code": "stale",
-   "n": 2
-  }
- },
+ "health": {},
  "last_run_date": "2026-11-14",
  "ms365": {
-  "active": true,
-  "id_tries": 1,
-  "incident_id": "MO1550821",
-  "status": "Service degradation",
-  "title": "Users may be unable to connect to multiple Microsoft 365 services",
-  "updated": "2026-11-13T22:00:36+00:00",
+  "active": false,
+  "incident_id": null,
+  "status": "Available",
+  "title": "",
+  "updated": "2026-11-14T05:50:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
