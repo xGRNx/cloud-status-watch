@@ -73,11 +73,6 @@
    "pub": "2026-09-29T16:27:21+00:00",
    "title": "Elevated errors on claude.ai, Claude Code, Claude Cowork and the Claude API"
   },
-  "https://status.claude.com/incidents/7g1qpkyz5gxh": {
-   "label": "Resolved",
-   "pub": "2026-09-22T02:35:23+00:00",
-   "title": "Elevated errors for multiple models"
-  },
   "https://status.claude.com/incidents/978mjkgw6mh7": {
    "label": "Resolved",
    "pub": "2026-10-13T18:00:04+00:00",
@@ -97,6 +92,11 @@
    "label": "Resolved",
    "pub": "2026-10-06T12:43:02+00:00",
    "title": "Elevated errors for Claude Opus 5.5"
+  },
+  "https://status.claude.com/incidents/ct4c2pwf2xpj": {
+   "label": "Investigating",
+   "pub": "2026-11-14T07:11:36+00:00",
+   "title": "Some users unable to sign up with Apple on the Claude iOS app"
   },
   "https://status.claude.com/incidents/h101vcmhnfky": {
    "label": "Resolved",
@@ -175,9 +175,9 @@
   "active": false,
   "incident_id": null,
   "status": "Available",
-  "title": "",
-  "updated": "2026-11-14T07:10:00+00:00",
-  "via": "JSON"
+  "title": "Microsoft Admin Center",
+  "updated": "2026-11-14T07:20:01+00:00",
+  "via": "RSS"
  },
  "ms_consumer": {
   "Microsoft 365 (Consumer)": "Service restored",
