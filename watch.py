@@ -23,7 +23,7 @@ from pathlib import Path
 
 # ---------------------------------------------------------------- ค่าตั้งต้น
 ICT = timezone(timedelta(hours=7))
-UA = "cloud-status-watch/0.2.1 (personal status monitor)"
+UA = "cloud-status-watch/0.3.0 (personal status monitor)"
 TIMEOUT = 25
 MAX_BYTES = 3_000_000
 
@@ -49,6 +49,9 @@ OK_STATUSES = {
 }
 MISMATCH_MINUTES = 90      # JSON กับ RSS ลงเวลา update ต่างกันเกินนี้ = remark
 STALE_HOURS = 6            # ยังขึ้นว่ามีเหตุ แต่ไม่มี update เกินนี้ = remark
+OVERDUE_MINUTES = 60       # เลยเวลา "Next update by" ที่ต้นทางประกาศไว้เกินนี้ = remark
+SUMMARY_LIMIT = 1200       # ความยาวเนื้อความประกาศ Microsoft ใน Discord (ตัดที่จบประโยค)
+DISCORD_MAX_CHARS = 5500   # Discord จำกัดตัวอักษรรวมของ embeds ต่อข้อความไว้ที่ 6000
 AWS_MAX_AGE_HOURS = 24     # รายการ AWS ที่เก่ากว่านี้ไม่แจ้งเตือน (บันทึก log อย่างเดียว)
 AWS_MAX_ALERTS = 10        # กันข้อความท่วมในรอบเดียว
 ID_MAX_TRIES = 6           # จำนวนรอบที่ลองค้น incident ID ซ้ำต่อหนึ่งหัวข้อ (นอกเหนือจากตอนมี update)
@@ -66,8 +69,9 @@ PROBLEM_TEXT = {
     "mismatch_status": "ช่องทาง JSON กับ RSS รายงานสถานะไม่ตรงกัน",
     "mismatch_time": f"ช่องทาง JSON กับ RSS ลงเวลา update ต่างกันเกิน {MISMATCH_MINUTES} นาที",
     "stale": f"ยังแสดงว่ามีเหตุ แต่ไม่มี update เกิน {STALE_HOURS} ชั่วโมง — ข้อมูลอาจค้าง",
+    "overdue": f"เลยเวลา update ถัดไปที่ต้นทางประกาศไว้เกิน {OVERDUE_MINUTES} นาที — ข้อมูลอาจค้าง",
 }
-IMMEDIATE = {"blocked", "parse", "shape", "mismatch_status", "mismatch_time", "stale"}
+IMMEDIATE = {"blocked", "parse", "shape", "mismatch_status", "mismatch_time", "stale", "overdue"}
 TH_MONTH = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.",
             "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."]
 
@@ -113,40 +117,86 @@ def clean(text, limit=500):
     return text if len(text) <= limit else text[: limit - 1].rstrip() + "…"
 
 
+def clip_sentence(text, limit):
+    """ตัดข้อความให้ไม่เกิน limit โดยจบที่ท้ายประโยค (ถ้าหาไม่ได้จึงตัดที่ช่องว่าง)"""
+    if len(text) <= limit:
+        return text
+    cut = text[: limit - 2]
+    ends = [m.end() for m in re.finditer(r"[.!?][\"')\]]?(?=\s)", cut) if m.end() >= limit // 2]
+    if ends:
+        return cut[: ends[-1]] + " …"
+    return cut.rsplit(" ", 1)[0].rstrip(",;: ") + "…"
+
+
+LABELS = ["User impact", "More info", "Current status", "Final status", "Next update by",
+          "Scope of impact", "Start time", "End time", "Root cause", "Title"]
+PARTS = {"impact": "User impact", "current": "Current status", "final": "Final status",
+         "next": "Next update by", "start": "Start time", "end": "End time"}
+
+
 def split_message(raw):
-    """แยกประกาศของ Microsoft เป็น (ผลกระทบ, สถานะปัจจุบัน, เวลา update ถัดไป)"""
+    """แยกประกาศของ Microsoft ตามป้ายกำกับ คืน dict ตาม PARTS (ไม่พบ = ข้อความว่าง)"""
     text = clean(raw, limit=20000)
-    labels = ["User impact", "More info", "Current status", "Next update by",
-              "Scope of impact", "Start time", "Root cause", "Title"]
 
     def part(label):
-        stops = "|".join(l for l in labels if l != label)
+        stops = "|".join(l for l in LABELS if l != label)
         m = re.search(label + r"\s*:\s*(.+?)(?=\s(?:" + stops + r")\s*:|$)", text, re.I)
         return m.group(1).strip() if m else ""
-    return part("User impact"), part("Current status"), part("Next update by")
+    return {key: part(label) for key, label in PARTS.items()}
 
 
 def first_sentence(text):
     return re.split(r"(?<=[.!?])\s", text.strip(), maxsplit=1)[0].rstrip(". ") if text else ""
 
 
-def fmt_next(text):
-    """'Friday, November 13, 2026, at 10:00 AM UTC' -> เวลาไทย (ถ้าอ่านไม่ได้คืนข้อความเดิม)"""
+def parse_when(text):
+    """'Friday, November 13, 2026, at 10:00 AM UTC' -> datetime (อ่านไม่ได้คืน None)"""
     m = re.search(r"([A-Z][a-z]+ \d{1,2}, \d{4}),? at (\d{1,2}:\d{2} [AP]M) UTC", text or "")
     if m:
         try:
-            dt = datetime.strptime(f"{m.group(1)} {m.group(2)}", "%B %d, %Y %I:%M %p")
-            return fmt_ict(dt.replace(tzinfo=timezone.utc))
+            return datetime.strptime(f"{m.group(1)} {m.group(2)}", "%B %d, %Y %I:%M %p").replace(tzinfo=timezone.utc)
         except ValueError:
             pass
-    return text or "ไม่ระบุ"
+    return None
+
+
+def fmt_next(text):
+    """แปลงเวลาในประกาศเป็นเวลาไทย (ถ้าอ่านไม่ได้คืนข้อความเดิม)"""
+    dt = parse_when(text)
+    return fmt_ict(dt) if dt else (text or "ไม่ระบุ")
 
 
 def post_fields(title, message):
-    """คืน (หัวข้อ, สรุป, update ถัดไป) — ถ้า Title ว่าง ใช้ประโยคแรกของ User impact แทน"""
-    impact, current, nxt = split_message(message)
-    return (clean(title, 250) or first_sentence(impact)[:250],
-            clean(current, 700) or clean(message, 500), nxt)
+    """คืน dict: title, summary, final, next, start, end
+    ถ้า Title ว่าง ใช้ประโยคแรกของ User impact แทน
+    summary = Current status ถ้าไม่มีใช้ Final status ถ้าไม่มีอีกใช้ข้อความทั้งก้อน"""
+    p = split_message(message)
+    body = p["current"] or p["final"] or clean(message, 20000)
+    return {"title": clean(title, 250) or first_sentence(p["impact"])[:250],
+            "summary": clip_sentence(body, SUMMARY_LIMIT), "final": clip_sentence(p["final"], SUMMARY_LIMIT),
+            "next": p["next"], "start": p["start"], "end": p["end"]}
+
+
+def period_field(rec):
+    """field ช่วงเวลาของเหตุ สำหรับประกาศปิดเหตุ (มีเฉพาะเมื่อต้นทางระบุ Start/End time)"""
+    rows = [f"{n} {fmt_next(rec[k])}" for n, k in (("เริ่ม", "start"), ("สิ้นสุด", "end")) if rec.get(k)]
+    return [("ช่วงเวลาของเหตุ (ตามประกาศ)", "\n".join(rows), False)] if rows else []
+
+
+def freshness(now, updated, next_text, was_code):
+    """ประกาศที่ยังเปิดอยู่ดูค้างหรือไม่ — คืน (code, detail) หรือ None
+    overdue = เลยเวลานัด update เกิน OVERDUE_MINUTES / stale = ไม่มี update เกิน STALE_HOURS
+    ถ้าเคยแจ้งด้วย code ใดไว้และเงื่อนไขนั้นยังจริง จะคง code เดิมเพื่อไม่แจ้งซ้ำ"""
+    due = parse_when(next_text)
+    codes = []
+    if due and now - due > timedelta(minutes=OVERDUE_MINUTES):
+        codes.append("overdue")
+    if updated and now - updated > timedelta(hours=STALE_HOURS):
+        codes.append("stale")
+    if not codes:
+        return None
+    detail = f"update ล่าสุด {fmt_ict(updated)}" + (f" / นัด update ถัดไป {fmt_ict(due)}" if due else "")
+    return (was_code if was_code in codes else codes[0]), detail
 
 
 def norm_status(value):
@@ -196,6 +246,10 @@ def rss_items(text):
 
 
 # ---------------------------------------------------------------- ตัวอ่านแต่ละแหล่ง
+EMPTY_POST = {"ok": True, "status": "ไม่มีประกาศ", "title": "", "summary": "", "final": "",
+              "next": "", "start": "", "end": "", "updated": None}
+
+
 def read_ms_json(text):
     try:
         data = json.loads(text)
@@ -203,28 +257,27 @@ def read_ms_json(text):
         raise Problem("parse", f"JSON: {e}")
     if isinstance(data, list):
         if not data:
-            return {"ok": True, "status": "ไม่มีประกาศ", "title": "", "summary": "", "next": "", "updated": None}
+            return dict(EMPTY_POST)
         data = data[0]
     if not isinstance(data, dict) or "Status" not in data:
         raise Problem("shape", "ไม่พบ field Status")
-    title, summary, nxt = post_fields(data.get("Title"), data.get("Message"))
     return {"ok": is_ok(data.get("Status")), "status": str(data.get("Status")),
-            "title": title, "summary": summary, "next": nxt,
-            "updated": parse_dt(data.get("LastUpdatedTime") or data.get("AuthoredDateTime"))}
+            "updated": parse_dt(data.get("LastUpdatedTime") or data.get("AuthoredDateTime")),
+            **post_fields(data.get("Title"), data.get("Message"))}
 
 
 def read_ms_rss(text):
     items = rss_items(text)
     if not items:
-        return {"ok": True, "status": "ไม่มีประกาศ", "title": "", "summary": "", "next": "", "updated": None}
+        return dict(EMPTY_POST)
     bad = [i for i in items if i["status"] and not is_ok(i["status"])]
     if not bad and not any(i["status"] for i in items):
         raise Problem("shape", "ไม่พบ <status> ใน item")
     it = (bad or items)[0]
     # <title> ของ RSS เป็นชื่อกลาง ๆ (Microsoft Admin Center) จึงดึงหัวข้อจากเนื้อความแทน
-    title, summary, nxt = post_fields("", it["desc"])
-    return {"ok": not bad, "status": it["status"], "title": title or clean(it["title"], 250),
-            "summary": summary, "next": nxt, "updated": it["pub"]}
+    f = post_fields("", it["desc"])
+    f["title"] = f["title"] or clean(it["title"], 250)
+    return {"ok": not bad, "status": it["status"], "updated": it["pub"], **f}
 
 
 def read_consumer(text):
@@ -244,9 +297,9 @@ def read_consumer(text):
         name = next((str(low[k]) for k in ("servicedisplayname", "serviceworkloadname", "servicename", "service",
                                             "workload", "name") if low.get(k)), "")
         if name:
-            title, summary, nxt = post_fields(low.get("title") or "", low.get("message") or "")
-            out[clean(name, 80)] = {"status": str(low["status"]), "title": title, "summary": summary, "next": nxt,
-                                    "updated": parse_dt(str(low.get("lastupdatedtime") or ""))}
+            out[clean(name, 80)] = {"status": str(low["status"]),
+                                    "updated": parse_dt(str(low.get("lastupdatedtime") or "")),
+                                    **post_fields(low.get("title") or "", low.get("message") or "")}
     if not out:
         raise Problem("shape", "ไม่พบรายการบริการที่มี Status")
     return out
@@ -290,9 +343,27 @@ def find_incident_id(page, title):
 
 
 # ---------------------------------------------------------------- Discord
+def embed_size(e):
+    return (len(e.get("title", "")) + len(e.get("description", "")) + len(e.get("footer", {}).get("text", ""))
+            + sum(len(f["name"]) + len(f["value"]) for f in e.get("fields", [])))
+
+
+def batches(embeds):
+    """แบ่งเป็นข้อความละไม่เกิน 10 embeds และไม่เกิน DISCORD_MAX_CHARS ตัวอักษร"""
+    batch, size = [], 0
+    for e in embeds:
+        n = embed_size(e)
+        if batch and (len(batch) == 10 or size + n > DISCORD_MAX_CHARS):
+            yield batch
+            batch, size = [], 0
+        batch.append(e)
+        size += n
+    if batch:
+        yield batch
+
+
 def send_discord(webhook, embeds, dry_run):
-    for i in range(0, len(embeds), 10):
-        chunk = embeds[i: i + 10]
+    for chunk in batches(embeds):
         if dry_run:
             for e in chunk:
                 print(f"\n--- [{e['title']}]\n{e.get('description', '')}")
@@ -350,6 +421,7 @@ def main():
 
     embeds, logs, problems, readings = [], [], {}, {}
     upenn_tried = False
+    unchecked = set()   # remark ที่รอบนี้ตรวจไม่ได้ จึงยังไม่ถือว่าปิด
 
     def log(kind, source, **kw):
         logs.append({"ts_utc": iso(now), "ts_ict": now.astimezone(ICT).isoformat(timespec="seconds"),
@@ -382,8 +454,10 @@ def main():
                     abs((mj["updated"] - mr["updated"]).total_seconds()) > MISMATCH_MINUTES * 60:
                 problems["ms_crosscheck"] = Problem(
                     "mismatch_time", f"JSON {fmt_ict(mj['updated'])} / RSS {fmt_ict(mr['updated'])}")
-        if active and rec["updated"] and (now - rec["updated"]) > timedelta(hours=STALE_HOURS):
-            problems["ms_stale"] = Problem("stale", f"update ล่าสุด {fmt_ict(rec['updated'])}")
+        if active:
+            late = freshness(now, rec["updated"], rec["next"], health.get("ms_stale", {}).get("code"))
+            if late:
+                problems["ms_stale"] = Problem(*late)
 
         kind = None
         if active and not prev.get("active"):
@@ -422,8 +496,11 @@ def main():
                       ("Update ล่าสุดของต้นทาง", fmt_ict(parse_dt(cur["updated"])), False)]
             if active:
                 fields.append(("Update ถัดไป (ตามประกาศ)", fmt_next(rec.get("next")), False))
+            else:
+                fields += period_field(rec)
             fields.append(("ช่องทางที่ update ล่าสุด", src, True))
-            embeds.append(embed(kind, head, f"**{shown.get('title') or '(ต้นทางไม่ระบุหัวข้อ)'}**\n{rec['summary'] if active else ''}",
+            body = rec["summary"] if active else rec["final"]
+            embeds.append(embed(kind, head, f"**{shown.get('title') or '(ต้นทางไม่ระบุหัวข้อ)'}**\n{body}",
                                 fields, PUBLIC_PAGE["ms365"]))
             log(kind, "ms365", status=cur["status"], title=shown.get("title"), updated=cur["updated"],
                 incident_id=shown.get("incident_id"), via=src, notified=True)
@@ -447,10 +524,22 @@ def main():
             if not is_ok(v["status"]):
                 fields += [("Update ล่าสุดของต้นทาง", fmt_ict(v["updated"]), False),
                            ("Update ถัดไป (ตามประกาศ)", fmt_next(v["next"]), False)]
-            desc = f"**{v['title']}**\n{v['summary']}" if v["title"] else v["summary"]
+                body = v["summary"]
+            else:
+                fields += period_field(v)
+                body = v["final"] or v["summary"]
+            desc = f"**{v['title']}**\n{body}" if v["title"] else body
             embeds.append(embed(kind, head, desc, fields, PUBLIC_PAGE["ms_consumer"]))
             log(kind, "ms_consumer", key=name, status=v["status"], previous=was, title=v["title"], notified=True)
         state["ms_consumer"] = {n: v["status"] for n, v in cons.items()}
+        was_code = health.get("consumer_stale", {}).get("code")
+        late = {n: f for n in down for f in [freshness(now, cons[n]["updated"], cons[n]["next"], was_code)] if f}
+        if late:
+            codes = {c for c, _ in late.values()}
+            code = was_code if was_code in codes else ("overdue" if "overdue" in codes else "stale")
+            problems["consumer_stale"] = Problem(code, " | ".join(f"{n}: {d}" for n, (_, d) in sorted(late.items())))
+    else:
+        unchecked.add("consumer_stale")
 
     # ---- Azure (feed ว่าง = ไม่มีเหตุ)
     az = load("azure", rss_items)
@@ -509,15 +598,18 @@ def main():
 
     # ---- Remark เรื่องสุขภาพของแหล่งข้อมูล
     label = {**{k: v[0] for k, v in SOURCES.items()},
-             "ms_crosscheck": "Microsoft 365 (เทียบ JSON กับ RSS)", "ms_stale": "Microsoft 365 (ความสดของข้อมูล)"}
+             "ms_crosscheck": "Microsoft 365 (เทียบ JSON กับ RSS)", "ms_stale": "Microsoft 365 (ความสดของข้อมูล)",
+             "consumer_stale": "Microsoft 365 consumer (ความสดของข้อมูล)"}
     for name in label:
         p, was = problems.get(name), health.get(name, {})
         if p is None:
             # upenn ถูกเรียกเฉพาะบางรอบ จึงไม่ถือว่า "หาย" จนกว่าจะเรียกสำเร็จจริง
-            if name == "upenn" and not upenn_tried:
+            if (name == "upenn" and not upenn_tried) or name in unchecked:
                 continue
             if was.get("alerted"):
-                embeds.append(embed("resolved", f"🟢 Remark ปิด: {label[name]}", "แหล่งข้อมูลกลับมาอ่านได้ตามปกติ"))
+                note = ("ต้นทางมี update ใหม่ หรือปิดเหตุแล้ว" if was.get("code") in ("stale", "overdue")
+                        else "แหล่งข้อมูลกลับมาอ่านได้ตามปกติ")
+                embeds.append(embed("resolved", f"🟢 Remark ปิด: {label[name]}", note))
                 log("remark_cleared", name, code=was.get("code"))
             health.pop(name, None)
             continue
