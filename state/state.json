@@ -42,7 +42,13 @@
   ]
  },
  "azure": {},
- "health": {},
+ "health": {
+  "ms_stale": {
+   "alerted": true,
+   "code": "stale",
+   "n": 1
+  }
+ },
  "last_run_date": "2026-11-14",
  "ms365": {
   "active": true,
