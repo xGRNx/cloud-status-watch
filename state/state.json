@@ -41,7 +41,8 @@
    "https://status.aws.amazon.com/#multipleservices-me-south-1_1789467748",
    "https://status.aws.amazon.com/#multipleservices-us-east-1_1794746282",
    "https://status.aws.amazon.com/#multipleservices-us-east-1_1794748545",
-   "https://status.aws.amazon.com/#multipleservices-us-east-1_1794748931"
+   "https://status.aws.amazon.com/#multipleservices-us-east-1_1794748931",
+   "https://status.aws.amazon.com/#multipleservices-us-east-1_1794752627"
   ]
  },
  "azure": {},
@@ -178,9 +179,9 @@
   "active": false,
   "incident_id": null,
   "status": "Available",
-  "title": "",
-  "updated": "2026-11-15T14:20:00+00:00",
-  "via": "JSON"
+  "title": "Microsoft Admin Center",
+  "updated": "2026-11-15T14:30:01+00:00",
+  "via": "RSS"
  },
  "ms_consumer": {
   "Microsoft 365 (Consumer)": "Operational",
