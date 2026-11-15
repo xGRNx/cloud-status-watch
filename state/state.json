@@ -95,7 +95,7 @@
   },
   "https://status.claude.com/incidents/ct4c2pwf2xpj": {
    "label": "Update",
-   "pub": "2026-11-14T20:12:05+00:00",
+   "pub": "2026-11-15T02:10:54+00:00",
    "title": "Some users unable to sign up with Apple on the Claude iOS app"
   },
   "https://status.claude.com/incidents/h101vcmhnfky": {
@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-15T02:10:00+00:00",
+  "updated": "2026-11-15T02:20:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
