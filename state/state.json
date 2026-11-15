@@ -176,11 +176,11 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-15T03:40:01+00:00",
+  "updated": "2026-11-15T03:50:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
-  "Microsoft 365 (Consumer)": "Service restored",
+  "Microsoft 365 (Consumer)": "Operational",
   "Microsoft Copilot": "Operational",
   "Microsoft Lists": "Operational",
   "Microsoft Teams Free": "Operational",
