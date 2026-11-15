@@ -38,7 +38,8 @@
    "https://status.aws.amazon.com/#multipleservices-me-south-1_1772546577",
    "https://status.aws.amazon.com/#multipleservices-me-south-1_1772556000",
    "https://status.aws.amazon.com/#multipleservices-me-south-1_1777532831",
-   "https://status.aws.amazon.com/#multipleservices-me-south-1_1789467748"
+   "https://status.aws.amazon.com/#multipleservices-me-south-1_1789467748",
+   "https://status.aws.amazon.com/#multipleservices-us-east-1_1794746282"
   ]
  },
  "azure": {},
@@ -176,7 +177,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-15T12:30:00+00:00",
+  "updated": "2026-11-15T12:40:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
