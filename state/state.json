@@ -78,6 +78,11 @@
    "pub": "2026-10-28T05:48:13+00:00",
    "title": "Elevated errors affecting the Gmail connector"
   },
+  "https://status.claude.com/incidents/b5cq662qf2wm": {
+   "label": "Update",
+   "pub": "2026-11-16T15:12:56+00:00",
+   "title": "Claude unable to join meetings"
+  },
   "https://status.claude.com/incidents/bhphxz3vr58g": {
    "label": "Resolved",
    "pub": "2026-10-05T13:21:37+00:00",
@@ -97,11 +102,6 @@
    "label": "Resolved",
    "pub": "2026-10-24T00:11:20+00:00",
    "title": "Elevated errors for Claude Fable 5.1, Sonnet 5.5, and Haiku 5.5"
-  },
-  "https://status.claude.com/incidents/k0h22tsvnydg": {
-   "label": "Resolved",
-   "pub": "2026-10-01T22:36:22+00:00",
-   "title": "Delayed credits on the Claude Platform"
   },
   "https://status.claude.com/incidents/kw2lxj1th04c": {
    "label": "Resolved",
@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-16T15:10:00+00:00",
+  "updated": "2026-11-16T15:20:01+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
