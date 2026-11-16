@@ -80,7 +80,7 @@
   },
   "https://status.claude.com/incidents/b5cq662qf2wm": {
    "label": "Update",
-   "pub": "2026-11-16T16:27:03+00:00",
+   "pub": "2026-11-16T18:10:10+00:00",
    "title": "Claude unable to join meetings"
   },
   "https://status.claude.com/incidents/bhphxz3vr58g": {
@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-16T18:00:00+00:00",
+  "updated": "2026-11-16T18:10:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
