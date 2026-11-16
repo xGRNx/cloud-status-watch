@@ -74,11 +74,6 @@
    "pub": "2026-10-24T00:37:17+00:00",
    "title": "Elevated errors for Claude Opus 5.5"
   },
-  "https://status.claude.com/incidents/4xvtc2gnq73l": {
-   "label": "Resolved",
-   "pub": "2026-09-29T16:27:21+00:00",
-   "title": "Elevated errors on claude.ai, Claude Code, Claude Cowork and the Claude API"
-  },
   "https://status.claude.com/incidents/978mjkgw6mh7": {
    "label": "Resolved",
    "pub": "2026-10-13T18:00:04+00:00",
@@ -149,6 +144,11 @@
    "pub": "2026-11-14T04:23:05+00:00",
    "title": "Elevated purchasing errors on claude.ai"
   },
+  "https://status.claude.com/incidents/r1b4f9bbnsx1": {
+   "label": "Investigating",
+   "pub": "2026-11-16T07:49:55+00:00",
+   "title": "Elevated errors for Claude Sonnet 5.5 and Claude Fable 5.2"
+  },
   "https://status.claude.com/incidents/sqn3fg1l96dl": {
    "label": "Resolved",
    "pub": "2026-11-13T21:49:44+00:00",
@@ -182,7 +182,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-16T07:40:01+00:00",
+  "updated": "2026-11-16T07:50:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
