@@ -145,8 +145,8 @@
    "title": "Elevated purchasing errors on claude.ai"
   },
   "https://status.claude.com/incidents/r1b4f9bbnsx1": {
-   "label": "Monitoring",
-   "pub": "2026-11-16T08:02:25+00:00",
+   "label": "Resolved",
+   "pub": "2026-11-16T09:04:39+00:00",
    "title": "Elevated errors for Claude Sonnet 5.5 and Claude Fable 5.2"
   },
   "https://status.claude.com/incidents/sqn3fg1l96dl": {
@@ -182,7 +182,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-16T09:00:00+00:00",
+  "updated": "2026-11-16T09:10:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
