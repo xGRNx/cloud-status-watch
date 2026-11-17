@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-17T17:50:00+00:00",
+  "updated": "2026-11-17T18:00:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
@@ -281,8 +281,8 @@
    "u": "2026-11-12T07:19:29+00:00"
   },
   "DV1550921": {
-   "s": "serviceRestored",
-   "u": "2026-11-12T22:00:05+00:00"
+   "s": "postIncidentReviewPublished",
+   "u": "2026-11-17T17:42:43+00:00"
   },
   "DZ1509195": {
    "s": "serviceRestored",
