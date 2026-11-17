@@ -54,8 +54,8 @@
    "title": "Elevated errors for Claude Sonnet 5.5"
   },
   "https://status.claude.com/incidents/1lglzf469c0z": {
-   "label": "Update",
-   "pub": "2026-11-17T18:56:06+00:00",
+   "label": "Resolved",
+   "pub": "2026-11-17T21:51:09+00:00",
    "title": "Some users unable to sign in with Apple on claude.ai and the Claude iOS app"
   },
   "https://status.claude.com/incidents/334jvgbrc4ff": {
@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-17T21:50:00+00:00",
+  "updated": "2026-11-17T22:00:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
