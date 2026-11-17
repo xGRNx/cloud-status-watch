@@ -175,9 +175,9 @@
   "active": false,
   "incident_id": null,
   "status": "Available",
-  "title": "",
-  "updated": "2026-11-17T22:20:00+00:00",
-  "via": "JSON"
+  "title": "Microsoft Admin Center",
+  "updated": "2026-11-17T22:30:01+00:00",
+  "via": "RSS"
  },
  "ms_consumer": {
   "Microsoft 365 (Consumer)": "Operational",
@@ -242,7 +242,7 @@
   },
   "CP1557574": {
    "s": "serviceDegradation",
-   "u": "2026-11-17T20:00:48+00:00"
+   "u": "2026-11-17T22:06:55+00:00"
   },
   "CR1550885": {
    "s": "serviceRestored",
