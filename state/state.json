@@ -170,13 +170,13 @@
   }
  },
  "health": {},
- "last_run_date": "2026-11-17",
+ "last_run_date": "2026-11-18",
  "ms365": {
   "active": false,
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-17T16:50:00+00:00",
+  "updated": "2026-11-17T17:00:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
