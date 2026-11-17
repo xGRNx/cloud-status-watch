@@ -84,8 +84,8 @@
    "title": "Elevated errors affecting the Gmail connector"
   },
   "https://status.claude.com/incidents/b5cq662qf2wm": {
-   "label": "Identified",
-   "pub": "2026-11-17T20:47:29+00:00",
+   "label": "Update",
+   "pub": "2026-11-17T23:39:43+00:00",
    "title": "Claude unable to join meetings"
   },
   "https://status.claude.com/incidents/ch27pb90bn85": {
@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-17T23:30:00+00:00",
+  "updated": "2026-11-17T23:40:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
