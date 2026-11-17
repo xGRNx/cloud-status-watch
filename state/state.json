@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-17T00:50:00+00:00",
+  "updated": "2026-11-17T01:00:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
@@ -581,8 +581,8 @@
    "u": "2026-11-10T19:47:08+00:00"
   },
   "TM1550488": {
-   "s": "serviceRestored",
-   "u": "2026-11-12T17:08:41+00:00"
+   "s": "postIncidentReviewPublished",
+   "u": "2026-11-17T00:23:05+00:00"
   },
   "TM1551945": {
    "s": "serviceRestored",
