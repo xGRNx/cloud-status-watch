@@ -90,7 +90,7 @@
   },
   "https://status.claude.com/incidents/b5cq662qf2wm": {
    "label": "Update",
-   "pub": "2026-11-17T23:39:43+00:00",
+   "pub": "2026-11-18T01:29:51+00:00",
    "title": "Claude unable to join meetings"
   },
   "https://status.claude.com/incidents/ct4c2pwf2xpj": {
@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-18T01:20:00+00:00",
+  "updated": "2026-11-18T01:30:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
@@ -402,7 +402,7 @@
   },
   "IT1549049": {
    "s": "serviceDegradation",
-   "u": "2026-11-12T01:18:04+00:00"
+   "u": "2026-11-18T01:01:18+00:00"
   },
   "IT1549289": {
    "s": "serviceRestored",
