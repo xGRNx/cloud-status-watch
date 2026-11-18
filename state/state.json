@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-17T23:50:00+00:00",
+  "updated": "2026-11-18T00:00:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
@@ -244,6 +244,10 @@
    "s": "serviceDegradation",
    "u": "2026-11-17T23:14:22+00:00"
   },
+  "CP1558065": {
+   "s": "restoringService",
+   "u": "2026-11-17T23:40:44+00:00"
+  },
   "CR1550885": {
    "s": "serviceRestored",
    "u": "2026-11-13T01:25:41+00:00"
@@ -287,10 +291,6 @@
   "DV1550921": {
    "s": "postIncidentReviewPublished",
    "u": "2026-11-17T17:42:43+00:00"
-  },
-  "DZ1509195": {
-   "s": "serviceRestored",
-   "u": "2026-10-15T19:24:36+00:00"
   },
   "DZ1515123": {
    "s": "serviceRestored",
