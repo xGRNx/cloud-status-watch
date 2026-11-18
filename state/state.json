@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-18T00:50:00+00:00",
+  "updated": "2026-11-18T01:00:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
@@ -246,7 +246,7 @@
   },
   "CP1558065": {
    "s": "serviceRestored",
-   "u": "2026-11-18T00:08:57+00:00"
+   "u": "2026-11-18T00:18:14+00:00"
   },
   "CR1550885": {
    "s": "serviceRestored",
@@ -285,8 +285,8 @@
    "u": "2026-11-11T18:29:24+00:00"
   },
   "CW1558072": {
-   "s": "restoringService",
-   "u": "2026-11-17T23:47:31+00:00"
+   "s": "serviceRestored",
+   "u": "2026-11-18T00:17:25+00:00"
   },
   "DV1549907": {
    "s": "serviceRestored",
@@ -343,6 +343,10 @@
   "EX1490154": {
    "s": "serviceRestored",
    "u": "2026-11-11T16:15:21+00:00"
+  },
+  "EX1490639": {
+   "s": "serviceRestored",
+   "u": "2026-11-18T00:40:46+00:00"
   },
   "EX1500900": {
    "s": "postIncidentReviewPublished",
@@ -543,10 +547,6 @@
   "TM1508612": {
    "s": "serviceRestored",
    "u": "2026-10-16T20:49:06+00:00"
-  },
-  "TM1509890": {
-   "s": "serviceRestored",
-   "u": "2026-10-16T17:32:24+00:00"
   },
   "TM1514781": {
    "s": "serviceRestored",
