@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-18T21:20:00+00:00",
+  "updated": "2026-11-18T21:30:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
@@ -249,8 +249,8 @@
    "u": "2026-11-18T00:18:14+00:00"
   },
   "CR1550885": {
-   "s": "serviceRestored",
-   "u": "2026-11-13T01:25:41+00:00"
+   "s": "postIncidentReviewPublished",
+   "u": "2026-11-18T20:56:27+00:00"
   },
   "CR1551339": {
    "s": "serviceRestored",
