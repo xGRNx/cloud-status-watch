@@ -94,8 +94,8 @@
    "title": "Claude Meetings auto-join limited on the Team plan"
   },
   "https://status.claude.com/incidents/c1kmrkmv5f3d": {
-   "label": "Investigating",
-   "pub": "2026-11-19T09:10:25+00:00",
+   "label": "Monitoring",
+   "pub": "2026-11-19T09:22:50+00:00",
    "title": "Elevated errors for Claude Mythos 5.2 and Claude Fable 5.2"
   },
   "https://status.claude.com/incidents/ct4c2pwf2xpj": {
@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-19T09:20:00+00:00",
+  "updated": "2026-11-19T09:30:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
