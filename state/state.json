@@ -89,9 +89,9 @@
    "title": "Elevated errors affecting the Gmail connector"
   },
   "https://status.claude.com/incidents/b5cq662qf2wm": {
-   "label": "Update",
-   "pub": "2026-11-18T01:29:51+00:00",
-   "title": "Claude unable to join meetings"
+   "label": "Resolved",
+   "pub": "2026-11-19T02:15:05+00:00",
+   "title": "Claude Meetings auto-join limited on the Team plan"
   },
   "https://status.claude.com/incidents/ct4c2pwf2xpj": {
    "label": "Resolved",
@@ -175,9 +175,9 @@
   "active": false,
   "incident_id": null,
   "status": "Available",
-  "title": "Microsoft Admin Center",
-  "updated": "2026-11-19T02:10:01+00:00",
-  "via": "RSS"
+  "title": "",
+  "updated": "2026-11-19T02:20:01+00:00",
+  "via": "JSON"
  },
  "ms_consumer": {
   "Microsoft 365 (Consumer)": "Operational",
