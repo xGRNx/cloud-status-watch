@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-19T11:50:00+00:00",
+  "updated": "2026-11-19T12:00:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
@@ -585,8 +585,8 @@
    "u": "2026-11-16T19:01:28+00:00"
   },
   "TM1560260": {
-   "s": "serviceDegradation",
-   "u": "2026-11-19T10:08:04+00:00"
+   "s": "serviceRestored",
+   "u": "2026-11-19T11:38:27+00:00"
   },
   "WP1539043": {
    "s": "serviceDegradation",
