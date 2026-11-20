@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-20T17:20:00+00:00",
+  "updated": "2026-11-20T17:30:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
@@ -398,7 +398,7 @@
   },
   "EX1561765": {
    "s": "serviceDegradation",
-   "u": "2026-11-20T16:33:16+00:00"
+   "u": "2026-11-20T17:03:28+00:00"
   },
   "IT1516138": {
    "s": "serviceRestored",
