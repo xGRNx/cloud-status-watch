@@ -153,11 +153,6 @@
    "pub": "2026-11-13T21:49:44+00:00",
    "title": "Elevated errors affecting the Microsoft 365 connector"
   },
-  "https://status.claude.com/incidents/vmys9qn874h4": {
-   "label": "Resolved",
-   "pub": "2026-10-07T21:23:29+00:00",
-   "title": "Issue with spend limits"
-  },
   "https://status.claude.com/incidents/vx06kp8wfpq2": {
    "label": "Resolved",
    "pub": "2026-10-25T08:49:29+00:00",
@@ -167,6 +162,11 @@
    "label": "Resolved",
    "pub": "2026-10-22T08:07:03+00:00",
    "title": "Elevated errors affecting Connectors"
+  },
+  "https://status.claude.com/incidents/yzs0s90d8fm8": {
+   "label": "Investigating",
+   "pub": "2026-11-23T09:49:22+00:00",
+   "title": "Elevated errors for multiple models"
   }
  },
  "health": {},
@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-23T09:40:00+00:00",
+  "updated": "2026-11-23T09:50:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
