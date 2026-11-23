@@ -170,14 +170,14 @@
   }
  },
  "health": {},
- "last_run_date": "2026-11-23",
+ "last_run_date": "2026-11-24",
  "ms365": {
   "active": false,
   "incident_id": null,
   "status": "Available",
-  "title": "",
-  "updated": "2026-11-23T16:50:00+00:00",
-  "via": "JSON"
+  "title": "Microsoft Admin Center",
+  "updated": "2026-11-23T17:00:01+00:00",
+  "via": "RSS"
  },
  "ms_consumer": {
   "Microsoft 365 (Consumer)": "Operational",
