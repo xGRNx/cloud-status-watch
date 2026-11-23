@@ -175,9 +175,9 @@
   "active": false,
   "incident_id": null,
   "status": "Available",
-  "title": "Microsoft Admin Center",
-  "updated": "2026-11-23T21:20:01+00:00",
-  "via": "RSS"
+  "title": "",
+  "updated": "2026-11-23T21:30:00+00:00",
+  "via": "JSON"
  },
  "ms_consumer": {
   "Microsoft 365 (Consumer)": "Operational",
@@ -194,7 +194,7 @@
  "upenn_feed": {
   "CP1447275": {
    "s": "serviceDegradation",
-   "u": "2026-11-21T07:03:38+00:00"
+   "u": "2026-11-23T20:50:18+00:00"
   },
   "CP1510883": {
    "s": "serviceRestored",
