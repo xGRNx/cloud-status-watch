@@ -164,8 +164,8 @@
    "title": "Elevated errors affecting Connectors"
   },
   "https://status.claude.com/incidents/yzs0s90d8fm8": {
-   "label": "Monitoring",
-   "pub": "2026-11-23T10:07:23+00:00",
+   "label": "Resolved",
+   "pub": "2026-11-23T11:07:41+00:00",
    "title": "Elevated errors for multiple models"
   }
  },
@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-23T11:00:00+00:00",
+  "updated": "2026-11-23T11:10:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
