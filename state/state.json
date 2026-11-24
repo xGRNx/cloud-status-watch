@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-24T20:50:00+00:00",
+  "updated": "2026-11-24T21:00:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
@@ -194,7 +194,7 @@
  "upenn_feed": {
   "CP1447275": {
    "s": "serviceDegradation",
-   "u": "2026-11-23T20:50:18+00:00"
+   "u": "2026-11-24T20:41:44+00:00"
   },
   "CP1510883": {
    "s": "serviceRestored",
@@ -585,8 +585,8 @@
    "u": "2026-11-23T18:38:03+00:00"
   },
   "TM1567135": {
-   "s": "investigating",
-   "u": "2026-11-24T20:07:58+00:00"
+   "s": "serviceDegradation",
+   "u": "2026-11-24T20:22:02+00:00"
   },
   "WP1539043": {
    "s": "serviceRestored",
