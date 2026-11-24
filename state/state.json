@@ -104,8 +104,8 @@
    "title": "Some users unable to sign up with Apple on the Claude iOS app"
   },
   "https://status.claude.com/incidents/fbvlx4wx4zx5": {
-   "label": "Investigating",
-   "pub": "2026-11-24T17:19:32+00:00",
+   "label": "Monitoring",
+   "pub": "2026-11-24T17:27:14+00:00",
    "title": "Elevated errors for Claude Haiku 5.5"
   },
   "https://status.claude.com/incidents/h101vcmhnfky": {
@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-24T17:20:01+00:00",
+  "updated": "2026-11-24T17:30:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
