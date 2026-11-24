@@ -175,9 +175,9 @@
   "active": false,
   "incident_id": null,
   "status": "Available",
-  "title": "",
-  "updated": "2026-11-24T07:20:00+00:00",
-  "via": "JSON"
+  "title": "Microsoft Admin Center",
+  "updated": "2026-11-24T07:30:01+00:00",
+  "via": "RSS"
  },
  "ms_consumer": {
   "Microsoft 365 (Consumer)": "Operational",
@@ -412,6 +412,10 @@
    "s": "serviceRestored",
    "u": "2026-11-12T19:20:00+00:00"
   },
+  "IT1566430": {
+   "s": "serviceDegradation",
+   "u": "2026-11-24T07:04:21+00:00"
+  },
   "MO1457843": {
    "s": "serviceDegradation",
    "u": "2026-10-31T00:04:58+00:00"
@@ -435,10 +439,6 @@
   "MO1505952": {
    "s": "postIncidentReviewPublished",
    "u": "2026-10-21T00:08:42+00:00"
-  },
-  "MO1515549": {
-   "s": "serviceRestored",
-   "u": "2026-10-19T20:03:04+00:00"
   },
   "MO1522731": {
    "s": "serviceRestored",
