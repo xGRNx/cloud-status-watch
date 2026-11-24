@@ -73,15 +73,15 @@
    "pub": "2026-10-24T00:37:17+00:00",
    "title": "Elevated errors for Claude Opus 5.5"
   },
+  "https://status.claude.com/incidents/3vbyqgnswwxq": {
+   "label": "Investigating",
+   "pub": "2026-11-24T00:10:40+00:00",
+   "title": "Claude for Microsoft 365 add-in missing for some users"
+  },
   "https://status.claude.com/incidents/6prv10gjdpz1": {
    "label": "Resolved",
    "pub": "2026-11-18T01:44:40+00:00",
    "title": "Elevated errors affecting the Google Docs connector"
-  },
-  "https://status.claude.com/incidents/978mjkgw6mh7": {
-   "label": "Resolved",
-   "pub": "2026-10-13T18:00:04+00:00",
-   "title": "Elevated errors on platform.claude.com"
   },
   "https://status.claude.com/incidents/9ftx658xtd5z": {
    "label": "Resolved",
@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-24T00:10:00+00:00",
+  "updated": "2026-11-24T00:20:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
