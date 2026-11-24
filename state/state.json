@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-24T15:20:00+00:00",
+  "updated": "2026-11-24T15:30:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
@@ -430,7 +430,7 @@
   },
   "MO1489432": {
    "s": "serviceRestored",
-   "u": "2026-11-24T14:24:09+00:00"
+   "u": "2026-11-24T15:00:22+00:00"
   },
   "MO1501829": {
    "s": "serviceRestored",
