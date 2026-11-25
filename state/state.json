@@ -158,10 +158,10 @@
    "pub": "2026-10-25T08:49:29+00:00",
    "title": "Elevated errors for Claude Fable 5.1"
   },
-  "https://status.claude.com/incidents/wj6r4t6mxq1r": {
+  "https://status.claude.com/incidents/yl30wkjblcm6": {
    "label": "Resolved",
-   "pub": "2026-10-22T08:07:03+00:00",
-   "title": "Elevated errors affecting Connectors"
+   "pub": "2026-11-25T05:32:26+00:00",
+   "title": "Elevated errors for multiple models"
   },
   "https://status.claude.com/incidents/yzs0s90d8fm8": {
    "label": "Resolved",
@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-25T05:30:00+00:00",
+  "updated": "2026-11-25T05:40:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
