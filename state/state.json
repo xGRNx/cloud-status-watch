@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-25T04:50:00+00:00",
+  "updated": "2026-11-25T05:00:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
@@ -242,7 +242,7 @@
   },
   "CP1542084": {
    "s": "serviceDegradation",
-   "u": "2026-11-24T06:03:56+00:00"
+   "u": "2026-11-25T04:39:12+00:00"
   },
   "CP1557574": {
    "s": "serviceRestored",
