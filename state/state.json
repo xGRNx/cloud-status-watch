@@ -79,8 +79,8 @@
    "title": "Elevated errors for Claude Opus 5.5"
   },
   "https://status.claude.com/incidents/3vbyqgnswwxq": {
-   "label": "Identified",
-   "pub": "2026-11-25T20:21:12+00:00",
+   "label": "Monitoring",
+   "pub": "2026-11-27T19:48:22+00:00",
    "title": "Claude for Microsoft 365 add-in missing for some users"
   },
   "https://status.claude.com/incidents/6prv10gjdpz1": {
@@ -175,9 +175,9 @@
   "active": false,
   "incident_id": null,
   "status": "Available",
-  "title": "",
-  "updated": "2026-11-27T19:40:00+00:00",
-  "via": "JSON"
+  "title": "Microsoft Admin Center",
+  "updated": "2026-11-27T19:50:01+00:00",
+  "via": "RSS"
  },
  "ms_consumer": {
   "Microsoft 365 (Consumer)": "Operational",
