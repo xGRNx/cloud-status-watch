@@ -54,8 +54,8 @@
    "title": "Elevated errors for Claude Sonnet 5.5"
   },
   "https://status.claude.com/incidents/0x1yvzkfmmxj": {
-   "label": "Update",
-   "pub": "2026-11-27T10:34:49+00:00",
+   "label": "Resolved",
+   "pub": "2026-11-27T10:49:33+00:00",
    "title": "Degraded performance for Claude Fable 5.2"
   },
   "https://status.claude.com/incidents/1lglzf469c0z": {
@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-27T10:40:00+00:00",
+  "updated": "2026-11-27T10:50:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
