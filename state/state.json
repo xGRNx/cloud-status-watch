@@ -53,6 +53,11 @@
    "pub": "2026-10-27T09:56:46+00:00",
    "title": "Elevated errors for Claude Sonnet 5.5"
   },
+  "https://status.claude.com/incidents/0x1yvzkfmmxj": {
+   "label": "Update",
+   "pub": "2026-11-27T10:34:49+00:00",
+   "title": "Degraded performance for Claude Fable 5.2"
+  },
   "https://status.claude.com/incidents/1lglzf469c0z": {
    "label": "Resolved",
    "pub": "2026-11-17T21:51:09+00:00",
@@ -107,11 +112,6 @@
    "label": "Resolved",
    "pub": "2026-11-24T17:50:42+00:00",
    "title": "Elevated errors for Claude Haiku 5.5"
-  },
-  "https://status.claude.com/incidents/h101vcmhnfky": {
-   "label": "Resolved",
-   "pub": "2026-10-24T00:11:20+00:00",
-   "title": "Elevated errors for Claude Fable 5.1, Sonnet 5.5, and Haiku 5.5"
   },
   "https://status.claude.com/incidents/kw2lxj1th04c": {
    "label": "Resolved",
@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-27T10:30:00+00:00",
+  "updated": "2026-11-27T10:40:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
