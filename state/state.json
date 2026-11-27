@@ -176,7 +176,7 @@
   "incident_id": null,
   "status": "Available",
   "title": "",
-  "updated": "2026-11-27T22:20:00+00:00",
+  "updated": "2026-11-27T22:30:00+00:00",
   "via": "JSON"
  },
  "ms_consumer": {
@@ -390,7 +390,7 @@
   },
   "EX1561765": {
    "s": "postIncidentReviewPublished",
-   "u": "2026-11-25T07:21:18+00:00"
+   "u": "2026-11-27T21:47:16+00:00"
   },
   "EX1569272": {
    "s": "serviceRestored",
