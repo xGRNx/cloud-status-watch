@@ -175,9 +175,9 @@
   "active": false,
   "incident_id": null,
   "status": "Available",
-  "title": "",
-  "updated": "2026-11-28T12:50:00+00:00",
-  "via": "JSON"
+  "title": "Microsoft Admin Center",
+  "updated": "2026-11-28T13:00:01+00:00",
+  "via": "RSS"
  },
  "ms_consumer": {
   "Microsoft 365 (Consumer)": "Operational",
@@ -390,7 +390,7 @@
   },
   "EX1561765": {
    "s": "postIncidentReviewPublished",
-   "u": "2026-11-27T21:47:16+00:00"
+   "u": "2026-11-28T12:18:18+00:00"
   },
   "EX1569272": {
    "s": "serviceRestored",
